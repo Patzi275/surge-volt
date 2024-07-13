@@ -2,15 +2,21 @@ import { commands, env, ProgressLocation, Uri, window, workspace } from 'vscode'
 import { surgeService } from '../services/surgeService';
 import { MaybeString } from '../types';
 import { getWorkspaceFolder, randomDomainName } from '../utils';
+import { Logger } from '../utils/logger';
 
 export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy', async () => {
     const randomDomain = randomDomainName() + '.surge.sh';
     const folderPath = getWorkspaceFolder();
 
     if (!folderPath) {
-        window.showErrorMessage("Please open the project folder before");
+        Logger.log('No project folder opened');
+        const action = await window.showErrorMessage("Please open the project folder before", "Open Folder");
+        if (action === 'Open Folder') {
+            commands.executeCommand('vscode.openFolder');
+        }
         return;
     }
+    const projectName = folderPath.split('/').pop();
 
     let domainName: MaybeString = await window.showInputBox({
         prompt: 'Domain',
@@ -25,8 +31,8 @@ export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy'
     }
 
     await window.withProgress({
-        location: ProgressLocation.Notification,
-        title: `Hosting on ${domainName}`,
+        location: ProgressLocation.Window,
+        title: `Deploying "${projectName}" project on surge`,
         cancellable: true
     }, (progress, token) => {
         token.onCancellationRequested(() => {
@@ -35,10 +41,11 @@ export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy'
 
         return new Promise<void>(async (resolve, reject) => {
             let cancel = false;
-
+            Logger.log('Deploying project...' + projectName + ' to ' + domainName);
             while (!cancel) {
                 try {
                     await surgeService.deploy(folderPath, domainName);
+                    cancel = true;
                     resolve();
                 } catch (error: any) {
                     if (!token.isCancellationRequested) {
@@ -50,11 +57,11 @@ export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy'
         });
     });
 
-    const action = await window.showInformationMessage(`Project hosted on http://${domainName}`, 'Open', 'Copy', 'Close');
+    const action = await window.showInformationMessage(`Successfully deployed "${projectName}" project on surge`, 'Open', 'Copy', 'Close');
 
     if (action === 'Open') {
         env.openExternal(Uri.parse(`http://${domainName}`));
     } else if (action === 'Copy') {
-        env.clipboard.writeText(domainName);
+        env.clipboard.writeText(`http://${domainName}`);
     }
 });
