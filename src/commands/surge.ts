@@ -33,7 +33,7 @@ export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy'
 
     await window.withProgress({
         location: ProgressLocation.Window,
-        title: `Deploying "${projectName}" project on surge`,
+        title: `Deploying project on surge...`,
         cancellable: true
     }, (progress, token) => {
         token.onCancellationRequested(() => {

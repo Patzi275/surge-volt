@@ -17,16 +17,16 @@
         "command": "surge-deploy.deploy",
         "title": "Surge: Deploy",
         "icon": {
-          "light": "./resources/light/plus.svg",
-          "dark": "./resources/dark/plus.svg"
+          "light": "./resources/light/add.svg",
+          "dark": "./resources/dark/add.svg"
         }
       },
       {
         "command": "surge-deploy.reload-list",
         "title": "Surge: Refresh",
         "icon": {
-          "light": "./resources/light/reload.svg",
-          "dark": "./resources/dark/reload.svg"
+          "light": "./resources/light/refresh.svg",
+          "dark": "./resources/dark/refresh.svg"
         }
       },
       {
@@ -36,6 +36,22 @@
       {
         "command": "surge-deploy.hello",
         "title": "Surge: Hello"
+      },
+      {
+        "command": "surge-deploy.rename",
+        "title": "Surge: Rename",
+        "icon": {
+          "light": "./resources/light/edit.svg",
+          "dark": "./resources/dark/edit.svg"
+        }
+      },
+      {
+        "command": "surge-deploy.delete",
+        "title": "Surge: Delete",
+        "icon": {
+          "light": "./resources/light/remove.svg",
+          "dark": "./resources/dark/remove.svg"
+        }
       }
     ],
     "viewsContainers": {
