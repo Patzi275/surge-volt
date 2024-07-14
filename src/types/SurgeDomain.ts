@@ -9,8 +9,13 @@ export class SurgeDomain extends TreeItem {
         public readonly collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None
     ) {
         super(hostname, collapsibleState);
-        // this.tooltip = this.label;
+        this.tooltip = 'Open';
         this.description = this.timeAgo;
+        this.command = {
+            command: 'surge-deploy.open-domain',
+            title: 'Open Domain',
+            arguments: [hostname]
+        };
     }
     
     iconPath = {

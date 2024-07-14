@@ -1,7 +1,5 @@
 import * as cp from 'child_process';
 import { Logger } from '../utils/logger';
-import { stdout } from 'process';
-import { hostname } from 'os';
 import { SurgeDomain } from '../types/SurgeDomain';
 
 type Domain = {

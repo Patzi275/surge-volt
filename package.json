@@ -30,6 +30,10 @@
         }
       },
       {
+        "command": "surge-deploy.open-domain",
+        "title": "Surge: Open domain"
+      },
+      {
         "command": "surge-deploy.hello",
         "title": "Surge: Hello"
       }
