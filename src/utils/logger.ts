@@ -1,9 +1,3 @@
-export class Logger {
-    static log(message: string) {
-        console.log(message);
-    }
-
-    static error(message: string) {
-        console.error(message);
-    }
-}
+import logger from "loglevel";
+logger.setLevel('debug');
+export default logger;

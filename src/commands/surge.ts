@@ -2,15 +2,15 @@ import { commands, env, ProgressLocation, Uri, window, workspace } from 'vscode'
 import { surgeService } from '../services/surgeService';
 import { MaybeString } from '../types';
 import { getWorkspaceFolder, randomDomainName } from '../utils';
-import { Logger } from '../utils/logger';
 import { SurgeDomain } from '../types/SurgeDomain';
+import logger from '../utils/logger';
 
 export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy', async (domain : SurgeDomain | undefined) => {
     const randomDomain = randomDomainName() + '.surge.sh';
     const folderPath = getWorkspaceFolder();
 
     if (!folderPath) {
-        Logger.log('No project folder opened');
+        logger.warn('No project folder opened');
         const action = await window.showErrorMessage("Please open the project folder before", "Open Folder");
         if (action === 'Open Folder') {
             commands.executeCommand('vscode.openFolder');
@@ -42,7 +42,7 @@ export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy'
 
         return new Promise<void>(async (resolve, reject) => {
             let cancel = false;
-            Logger.log('Deploying project...' + projectName + ' to ' + domainName);
+            logger.info('Deploying project...' + projectName + ' to ' + domainName);
             while (!cancel) {
                 try {
                     await surgeService.deploy(folderPath, domainName);

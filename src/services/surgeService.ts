@@ -1,6 +1,6 @@
 import * as cp from 'child_process';
-import { Logger } from '../utils/logger';
 import { SurgeDomain } from '../types/SurgeDomain';
+import logger from '../utils/logger';
 
 type Domain = {
     id: string,
@@ -13,7 +13,7 @@ class SurgeService {
     private deployingProcess: cp.ChildProcess | null = null;
 
     async deploy(folderPath: string, domain: string): Promise<void> {
-        Logger.log(`Deploying ${folderPath} on ${domain}`)
+        logger.info(`Deploying ${folderPath} on ${domain}`)
         return new Promise((resolve, reject) => {
             this.deployingProcess = cp.exec(`surge ${folderPath} ${domain}`, (err, stdout, stderr) => {
                 this.deployingProcess = null;
@@ -28,16 +28,16 @@ class SurgeService {
 
     cancel(): void {
         if (this.deployingProcess) {
-            Logger.log('Cancelling deployment process');
+            logger.info('Cancelling deployment process');
             this.deployingProcess.kill();
             this.deployingProcess = null;
         } else {
-            Logger.error('No deployment process to cancel');
+            logger.warn('No deployment process to cancel');
         }
     }
 
     async list(): Promise<SurgeDomain[]> {
-        Logger.log('Listing domains');
+        logger.info('Listing domains');
         return new Promise((resolve, reject) => {
             this.listingProcess = cp.exec(`surge list`, (error, stdout, stderr) => {
                 const elements = extractDomainData(stdout);
