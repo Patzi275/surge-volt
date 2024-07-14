@@ -46,39 +46,35 @@ export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy'
         domainName += '.surge.sh';
     }
 
-    await window.withProgress({
+    const done = await window.withProgress({
         location: ProgressLocation.Window,
         title: `Deploying project on surge...`,
         cancellable: true
-    }, (progress, token) => {
-        token.onCancellationRequested(() => {
-            surgeService.cancel();
-        });
+    }, async (progress, token) => {
+        token.onCancellationRequested(() => surgeService.cancel('deploying'));
 
-        return new Promise<void>(async (resolve, reject) => {
-            let cancel = false;
-            logger.info('Deploying project...' + projectName + ' to ' + domainName);
-            while (!cancel) {
-                try {
-                    await surgeService.deploy(folderPath, domainName);
-                    cancel = true;
-                    resolve();
-                } catch (error: any) {
-                    if (!token.isCancellationRequested) {
-                        const action = await window.showErrorMessage('Error deploying project', { detail: error.message }, 'Retry', 'Cancel');
-                        cancel = action !== 'Retry';
-                    }
-                }
+        logger.info(`Deploying project ${projectName} to ${domainName}`);
+
+        while (true) {
+            try {
+                await surgeService.deploy(folderPath, domainName);
+                return true;
+            } catch (error: any) {
+                if (token.isCancellationRequested) { return false; }
+                const action = await window.showErrorMessage('Error deploying project :', { detail: error.message }, 'Retry', 'Cancel');
+                if (action !== 'Retry') { return false; }
             }
-        });
+        }
     });
 
-    commands.executeCommand('surge-deploy.refresh-domain-list');
-    const action = await window.showInformationMessage(`Successfully deployed "${projectName}" project on surge`, 'Open', 'Copy', 'Close');
-
-    if (action === 'Open') {
-        env.openExternal(Uri.parse(`http://${domainName}`));
-    } else if (action === 'Copy') {
-        env.clipboard.writeText(`http://${domainName}`);
+    if (done) {
+        commands.executeCommand('surge-deploy.refresh-domain-list');
+        const action = await window.showInformationMessage(`Successfully deployed "${projectName}" project on surge`, 'Open', 'Copy', 'Close');
+        if (action === 'Open') {
+            env.openExternal(Uri.parse(`http://${domainName}`));
+        } else if (action === 'Copy') {
+            env.clipboard.writeText(`http://${domainName}`);
+        }
     }
+
 });

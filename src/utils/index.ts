@@ -17,3 +17,14 @@ export const getWorkspaceFolder = () : MaybeString => {
     }
     return workspace.workspaceFolders[0].uri.path;
 };
+
+export const extractNameOnly = (domain: string) => {
+    let domainName = domain;
+    if (domainName.endsWith('.surge.sh')) {
+        domainName = domainName.replace('.surge.sh', '');
+    }
+    if (domainName.startsWith('http://') || domainName.startsWith('https://'))  {
+        domainName = domainName.replace('http://', '');
+    }
+    return domainName;
+}

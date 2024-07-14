@@ -1,11 +1,12 @@
 import { hello } from './commands/hello';
 import { deploySurgeCommand } from './commands/deploySurge';
-import { ExtensionContext, window } from 'vscode';
+import { commands, ExtensionContext, window } from 'vscode';
 import { publishedDomainTreeData } from './providers/publishedDomainProvider';
 import { openDomainCommand } from './commands/openDomain';
 import logger from './utils/logger';
 import { deployOnExistingSurgeCommand } from './commands/deployOnExistingSurge';
 import { refreshDomainListCommand } from './commands/refreshDomainList';
+import { deleteDomainCommand } from './commands/deleteDomain';
 
 export function activate(context: ExtensionContext) {
 	logger.info('Congratulations, your extension "surge-deploy" is now active!');
@@ -16,6 +17,8 @@ export function activate(context: ExtensionContext) {
 		deployOnExistingSurgeCommand,
 		openDomainCommand,
 		refreshDomainListCommand,
+		deleteDomainCommand,
+		commands.registerCommand('getContext', () => context),
 
 		// tree data providers
 		window.registerTreeDataProvider('surge-default', publishedDomainTreeData),

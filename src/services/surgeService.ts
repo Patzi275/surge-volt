@@ -1,6 +1,7 @@
 import * as cp from 'child_process';
 import { SurgeDomain } from '../types/SurgeDomain';
 import logger from '../utils/logger';
+import { commands, ExtensionContext } from 'vscode';
 
 type Domain = {
     id: string,
@@ -11,6 +12,7 @@ type Domain = {
 class SurgeService {
     private listingProcess: cp.ChildProcess | null = null;
     private deployingProcess: cp.ChildProcess | null = null;
+    private teardownProcess: cp.ChildProcess | null = null;
 
     async deploy(folderPath: string, domain: string): Promise<void> {
         logger.info(`Deploying ${folderPath} on ${domain}`)
@@ -26,13 +28,21 @@ class SurgeService {
         });
     }
 
-    cancel(): void {
-        if (this.deployingProcess) {
+    cancel(name : 'deploying' | 'listing' | 'teardown') {
+        if (name === 'deploying' && this.deployingProcess) {
             logger.info('Cancelling deployment process');
             this.deployingProcess.kill();
             this.deployingProcess = null;
+        } else if (name === 'listing' && this.listingProcess) {
+            logger.info('Cancelling listing process');
+            this.listingProcess.kill();
+            this.listingProcess = null;
+        } else if (name === 'teardown' && this.teardownProcess) {
+            logger.info('Cancelling teardown process');
+            this.teardownProcess.kill();
+            this.teardownProcess = null;
         } else {
-            logger.warn('No deployment process to cancel');
+            logger.warn(`No ${name} process to cancel`);
         }
     }
 
@@ -41,7 +51,32 @@ class SurgeService {
         return new Promise((resolve, reject) => {
             this.listingProcess = cp.exec(`surge list`, (error, stdout, stderr) => {
                 const elements = extractDomainData(stdout);
-                resolve(elements);
+                commands.executeCommand('getContext').then((context: unknown) => {
+                    const extensionContext = context as ExtensionContext;
+                    extensionContext.workspaceState.update('surgeDomains', elements);
+                    resolve(elements);
+                });
+            });
+        });
+    }
+
+    async teardown(name: string): Promise<void> {
+        logger.info(`Tearing down ${name}`);
+        const surge = cp.spawn('surge', ['teardown']);
+        this.teardownProcess = surge;
+        surge.stdin.write(`${name}.surge.sh\n`);
+        surge.stdin.end();
+
+        return new Promise((resolve, reject) => {
+            surge.on('close', (code) => {
+                if (code === 0) {
+                    logger.info(`Domain ${name} torn down`);
+                    resolve();
+                } else {
+                    logger.error(`Error tearing down domain ${name}`);
+                    reject(new Error(`Exit code ${code}`));
+                }
+                this.teardownProcess = null;
             });
         });
     }

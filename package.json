@@ -48,9 +48,9 @@
         "icon": "$(edit)"
       },
       {
-        "command": "surge-deploy.delete",
+        "command": "surge-deploy.delete-domain",
         "category": "Surge",
-        "title": "Delete",
+        "title": "Delete domain",
         "icon": "$(trash)"
       }
     ],
@@ -102,7 +102,7 @@
           "group": "inline@2"
         },
         {
-          "command": "surge-deploy.delete",
+          "command": "surge-deploy.delete-domain",
           "when": "view == surge-default",
           "group": "inline@3"
         }
