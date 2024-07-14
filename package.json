@@ -15,43 +15,43 @@
     "commands": [
       {
         "command": "surge-deploy.deploy",
-        "title": "Surge: Deploy",
-        "icon": {
-          "light": "./resources/light/add.svg",
-          "dark": "./resources/dark/add.svg"
-        }
+        "category": "Surge",
+        "title": "Deploy",
+        "icon": "$(add)"
+      },
+      {
+        "command": "surge-deploy.deploy-on-existing",
+        "category": "Surge",
+        "title": "Deploy on existing",
+        "icon": "$(cloud-upload)"
       },
       {
         "command": "surge-deploy.reload-list",
-        "title": "Surge: Refresh",
-        "icon": {
-          "light": "./resources/light/refresh.svg",
-          "dark": "./resources/dark/refresh.svg"
-        }
+        "category": "Surge",
+        "title": "Refresh",
+        "icon": "$(refresh)"
       },
       {
         "command": "surge-deploy.open-domain",
-        "title": "Surge: Open domain"
+        "category": "Surge",
+        "title": "Open domain"
       },
       {
         "command": "surge-deploy.hello",
-        "title": "Surge: Hello"
+        "category": "Surge",
+        "title": "Hello"
       },
       {
         "command": "surge-deploy.rename",
-        "title": "Surge: Rename",
-        "icon": {
-          "light": "./resources/light/edit.svg",
-          "dark": "./resources/dark/edit.svg"
-        }
+        "category": "Surge",
+        "title": "Rename",
+        "icon": "$(edit)"
       },
       {
         "command": "surge-deploy.delete",
-        "title": "Surge: Delete",
-        "icon": {
-          "light": "./resources/light/remove.svg",
-          "dark": "./resources/dark/remove.svg"
-        }
+        "category": "Surge",
+        "title": "Delete",
+        "icon": "$(trash)"
       }
     ],
     "viewsContainers": {
@@ -92,8 +92,25 @@
       ],
       "view/item/context": [
         {
-          "command": "surge-deploy.deploy",
+          "command": "surge-deploy.deploy-on-existing",
+          "when": "view == surge-default",
           "group": "inline"
+        },
+        {
+          "command": "surge-deploy.rename",
+          "when": "view == surge-default",
+          "group": "inline"
+        },
+        {
+          "command": "surge-deploy.delete",
+          "when": "view == surge-default",
+          "group": "inline"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "surge-deploy.deploy-on-existing",
+          "when": "false"
         }
       ]
     }
