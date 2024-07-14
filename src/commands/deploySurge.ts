@@ -1,9 +1,10 @@
 import { commands, env, ProgressLocation, Uri, window, workspace } from 'vscode';
 import { surgeService } from '../services/surgeService';
 import { MaybeString } from '../types';
-import { getWorkspaceFolder, randomDomainName } from '../utils';
+import { extractNameOnly, getWorkspaceFolder, randomDomainName } from '../utils';
 import { SurgeDomain } from '../types/SurgeDomain';
 import logger from '../utils/logger';
+import Storage from '../services/storageService';
 
 export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy', async (domain: SurgeDomain | undefined) => {
     logger.debug("Surge domain", domain);
@@ -36,15 +37,23 @@ export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy'
         domainName = await window.showInputBox({
             prompt: 'Domain',
             value: domainName,
-            // TODO: Check if the name is used by the same user
             validateInput: (value: string) => null,
         });
+
+        if (!domainName) { return; }
+        domainName = extractNameOnly(domainName);
+        if (Storage.doSurgeDomainExist(domainName)) {
+            const action = await window.showWarningMessage(
+                `You are about to deploy "${projectName}" project on surge to the existing domain "${domainName}.surge.sh"`,
+                { modal: true },
+                'Deploy', 'Yes, don\'t show again'
+            );
+            if (action !== 'Deploy') {
+                return;
+            }
+        }
     }
 
-    if (!domainName) { return; }
-    if (!domainName.endsWith('.surge.sh')) {
-        domainName += '.surge.sh';
-    }
 
     const done = await window.withProgress({
         location: ProgressLocation.Window,
@@ -53,7 +62,7 @@ export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy'
     }, async (progress, token) => {
         token.onCancellationRequested(() => surgeService.cancel('deploying'));
 
-        logger.info(`Deploying project ${projectName} to ${domainName}`);
+        logger.info(`Deploying project ${projectName} to ${domainName}.surge.sh`);
 
         while (true) {
             try {

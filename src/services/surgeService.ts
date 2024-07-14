@@ -14,8 +14,9 @@ class SurgeService {
     private deployingProcess: cp.ChildProcess | null = null;
     private teardownProcess: cp.ChildProcess | null = null;
 
-    async deploy(folderPath: string, domain: string): Promise<void> {
-        logger.info(`Deploying ${folderPath} on ${domain}`)
+    async deploy(folderPath: string, domainName: string): Promise<void> {
+        const domain = domainName + '.surge.sh';
+        logger.info(`Deploying ${folderPath} on ${domain}`);
         return new Promise((resolve, reject) => {
             this.deployingProcess = cp.exec(`surge ${folderPath} ${domain}`, (err, stdout, stderr) => {
                 this.deployingProcess = null;

@@ -18,10 +18,8 @@ export const deleteDomainCommand = commands.registerCommand('surge-deploy.delete
         if (!domainName) { return; }
 
         domainName = extractNameOnly(domainName);
-        const surgeDomains = Storage.getSurgeDomains();
-        logger.info("Getted dila", surgeDomains);
 
-        if (!surgeDomains.some((d) => d.hostname === domainName)) {
+        if (!Storage.doSurgeDomainExist(domainName)) {
             window.showErrorMessage('Domain not found');
             return;
         }

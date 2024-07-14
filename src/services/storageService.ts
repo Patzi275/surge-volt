@@ -18,4 +18,8 @@ export default class Storage {
     static async setSurgeDomains(domains: SurgeDomain[]) {
         await this.context?.workspaceState.update('surgeDomains', domains);
     }
+
+    static doSurgeDomainExist(name: string): boolean {
+        return this.getSurgeDomains().some((d) => d.hostname === name);
+    }
 }
