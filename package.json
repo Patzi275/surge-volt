@@ -15,9 +15,68 @@
     "commands": [
       {
         "command": "surge-deploy.deploy",
-        "title": "Surge: Deplpy"
+        "title": "Surge: Deploy",
+        "icon": {
+          "light": "./resources/light/plus.svg",
+          "dark": "./resources/dark/plus.svg"
+        }
+      },
+      {
+        "command": "surge-deploy.reload-list",
+        "title": "Surge: Refresh",
+        "icon": {
+          "light": "./resources/light/reload.svg",
+          "dark": "./resources/dark/reload.svg"
+        }
+      },
+      {
+        "command": "surge-deploy.hello",
+        "title": "Surge: Hello"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "surge-control",
+          "title": "Surge Control",
+          "icon": "./resources/octopus.svg"
+        }
+      ]
+    },
+    "views": {
+      "surge-control": [
+        {
+          "id": "surge-default",
+          "name": "Surge Control"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "surge-default",
+        "contents": "No Surge project found.\n[Add Dependency](command:nodeDependencies.addEntry)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "surge-deploy.reload-list",
+          "when": "view == surge-default",
+          "group": "navigation"
+        },
+        {
+          "command": "surge-deploy.deploy",
+          "when": "view == surge-default",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "surge-deploy.deploy",
+          "group": "inline"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

@@ -3,8 +3,9 @@ import { surgeService } from '../services/surgeService';
 import { MaybeString } from '../types';
 import { getWorkspaceFolder, randomDomainName } from '../utils';
 import { Logger } from '../utils/logger';
+import { SurgeDomain } from '../types/SurgeDomain';
 
-export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy', async () => {
+export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy', async (domain : SurgeDomain | undefined) => {
     const randomDomain = randomDomainName() + '.surge.sh';
     const folderPath = getWorkspaceFolder();
 
