@@ -22,11 +22,11 @@
       {
         "command": "surge-deploy.deploy-on-existing",
         "category": "Surge",
-        "title": "Deploy on existing",
+        "title": "Deploy on this domain",
         "icon": "$(cloud-upload)"
       },
       {
-        "command": "surge-deploy.reload-list",
+        "command": "surge-deploy.refresh-domain-list",
         "category": "Surge",
         "title": "Refresh",
         "icon": "$(refresh)"
@@ -80,7 +80,7 @@
     "menus": {
       "view/title": [
         {
-          "command": "surge-deploy.reload-list",
+          "command": "surge-deploy.refresh-domain-list",
           "when": "view == surge-default",
           "group": "navigation"
         },
@@ -94,17 +94,17 @@
         {
           "command": "surge-deploy.deploy-on-existing",
           "when": "view == surge-default",
-          "group": "inline"
+          "group": "inline@1"
         },
         {
           "command": "surge-deploy.rename",
           "when": "view == surge-default",
-          "group": "inline"
+          "group": "inline@2"
         },
         {
           "command": "surge-deploy.delete",
           "when": "view == surge-default",
-          "group": "inline"
+          "group": "inline@3"
         }
       ],
       "commandPalette": [

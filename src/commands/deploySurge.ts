@@ -5,9 +5,10 @@ import { getWorkspaceFolder, randomDomainName } from '../utils';
 import { SurgeDomain } from '../types/SurgeDomain';
 import logger from '../utils/logger';
 
-export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy', async (domain : SurgeDomain | undefined) => {
-    const randomDomain = randomDomainName() + '.surge.sh';
+export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy', async (domain: SurgeDomain | undefined) => {
+    logger.debug("Surge domain", domain);
     const folderPath = getWorkspaceFolder();
+    let domainName: MaybeString = randomDomainName() + '.surge.sh';
 
     if (!folderPath) {
         logger.warn('No project folder opened');
@@ -17,14 +18,28 @@ export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy'
         }
         return;
     }
+
     const projectName = folderPath.split('/').pop();
 
-    let domainName: MaybeString = await window.showInputBox({
-        prompt: 'Domain',
-        value: randomDomain,
-        // TODO: Check if the name is used by the same user
-        validateInput: (value: string) => null,
-    });
+    if (domain) {
+        domainName = domain.hostname;
+        // TODO: Implement "Don't show again" feature
+        const action = await window.showWarningMessage(
+            `You are about to deploy "${projectName}" project on surge to the existing domain "${domainName}.surge.sh"`,
+            { modal: true },
+            'Deploy', 'Yes, don\'t show again'
+        );
+        if (action !== 'Deploy') {
+            return;
+        }
+    } else {
+        domainName = await window.showInputBox({
+            prompt: 'Domain',
+            value: domainName,
+            // TODO: Check if the name is used by the same user
+            validateInput: (value: string) => null,
+        });
+    }
 
     if (!domainName) { return; }
     if (!domainName.endsWith('.surge.sh')) {
@@ -58,6 +73,7 @@ export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy'
         });
     });
 
+    commands.executeCommand('surge-deploy.refresh-domain-list');
     const action = await window.showInformationMessage(`Successfully deployed "${projectName}" project on surge`, 'Open', 'Copy', 'Close');
 
     if (action === 'Open') {

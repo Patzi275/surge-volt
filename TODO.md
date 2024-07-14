@@ -1,2 +1,2 @@
 - Add walkthroughs
-- 
+- Implement "Don't show again" buttons for notifications

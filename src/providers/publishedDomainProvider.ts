@@ -1,4 +1,4 @@
-import { TreeDataProvider, TreeItem } from "vscode";
+import { EventEmitter, TreeDataProvider, TreeItem } from "vscode";
 import { surgeService } from "../services/surgeService";
 import { SurgeDomain } from "../types/SurgeDomain";
 
@@ -16,6 +16,13 @@ class PublishedDomainProvider implements TreeDataProvider<SurgeDomain> {
             }).catch(reject);
         });
     }
+
+    refresh(): void {
+        this._onDidChangeTreeData.fire(undefined);
+    }
+
+    private _onDidChangeTreeData: EventEmitter<SurgeDomain | undefined> = new EventEmitter<SurgeDomain | undefined>();
+    readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 }
 
 export const publishedDomainTreeData = new PublishedDomainProvider();
