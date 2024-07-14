@@ -7,9 +7,11 @@ import logger from './utils/logger';
 import { deployOnExistingSurgeCommand } from './commands/deployOnExistingSurge';
 import { refreshDomainListCommand } from './commands/refreshDomainList';
 import { deleteDomainCommand } from './commands/deleteDomain';
+import Storage from './services/storageService';
 
 export function activate(context: ExtensionContext) {
 	logger.info('Congratulations, your extension "surge-deploy" is now active!');
+	Storage.init(context);
 	context.subscriptions.push(
 		// commands
 		hello,

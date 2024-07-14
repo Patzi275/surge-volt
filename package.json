@@ -42,12 +42,6 @@
         "title": "Hello"
       },
       {
-        "command": "surge-deploy.rename",
-        "category": "Surge",
-        "title": "Rename",
-        "icon": "$(edit)"
-      },
-      {
         "command": "surge-deploy.delete-domain",
         "category": "Surge",
         "title": "Delete domain",
@@ -97,14 +91,9 @@
           "group": "inline@1"
         },
         {
-          "command": "surge-deploy.rename",
-          "when": "view == surge-default",
-          "group": "inline@2"
-        },
-        {
           "command": "surge-deploy.delete-domain",
           "when": "view == surge-default",
-          "group": "inline@3"
+          "group": "inline@2"
         }
       ],
       "commandPalette": [

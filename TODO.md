@@ -1,3 +1,5 @@
 - Add walkthroughs
 - Implement "Don't show again" buttons for notifications
 - Manage multiple accounts
+- Rename feature (download and upload on new domain while deleting the previous)
+- Add command deploy directory (in the project)

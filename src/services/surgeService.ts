@@ -1,7 +1,7 @@
 import * as cp from 'child_process';
 import { SurgeDomain } from '../types/SurgeDomain';
 import logger from '../utils/logger';
-import { commands, ExtensionContext } from 'vscode';
+import Storage from './storageService';
 
 type Domain = {
     id: string,
@@ -47,15 +47,11 @@ class SurgeService {
     }
 
     async list(): Promise<SurgeDomain[]> {
-        logger.info('Listing domains');
+        logger.info('Domain list extraction');
         return new Promise((resolve, reject) => {
             this.listingProcess = cp.exec(`surge list`, (error, stdout, stderr) => {
                 const elements = extractDomainData(stdout);
-                commands.executeCommand('getContext').then((context: unknown) => {
-                    const extensionContext = context as ExtensionContext;
-                    extensionContext.workspaceState.update('surgeDomains', elements);
-                    resolve(elements);
-                });
+                Storage.setSurgeDomains(elements).then(() => resolve(elements));
             });
         });
     }

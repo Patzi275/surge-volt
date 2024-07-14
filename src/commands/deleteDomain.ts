@@ -3,6 +3,8 @@ import { surgeService } from "../services/surgeService";
 import { MaybeString } from "../types";
 import { extractNameOnly } from "../utils";
 import { SurgeDomain } from "../types/SurgeDomain";
+import logger from "../utils/logger";
+import Storage from "../services/storageService";
 
 export const deleteDomainCommand = commands.registerCommand('surge-deploy.delete-domain', async (domain: SurgeDomain | null) => {
     let domainName: MaybeString;
@@ -16,8 +18,8 @@ export const deleteDomainCommand = commands.registerCommand('surge-deploy.delete
         if (!domainName) { return; }
 
         domainName = extractNameOnly(domainName);
-        const context = (await commands.executeCommand('getContext')) as ExtensionContext;
-        const surgeDomains = context.workspaceState.get('surgeDomains') as SurgeDomain[];
+        const surgeDomains = Storage.getSurgeDomains();
+        logger.info("Getted dila", surgeDomains);
 
         if (!surgeDomains.some((d) => d.hostname === domainName)) {
             window.showErrorMessage('Domain not found');
