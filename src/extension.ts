@@ -12,7 +12,7 @@ import { exec } from 'child_process';
 import { installSurgeCommand } from './commands/installSurge';
 
 export function activate(context: ExtensionContext) {
-	logger.info('Congratulations, your extension "surge-deploy" is now active!');
+	logger.info('Congratulations, your extension "surge-volt" is now active!');
 	initContextVariables();
 	Storage.init(context);
 	context.subscriptions.push(
@@ -27,7 +27,7 @@ export function activate(context: ExtensionContext) {
 		commands.registerCommand('getContext', () => context),
 
 		// tree data providers
-		window.registerTreeDataProvider('surge-default', publishedDomainTreeData),
+		window.registerTreeDataProvider('surge-domains', publishedDomainTreeData),
 		
 	);
 }

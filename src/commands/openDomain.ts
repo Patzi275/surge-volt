@@ -3,7 +3,7 @@ import { SurgeDomain } from "../types/SurgeDomain";
 import { MaybeString } from "../types";
 import logger from "../utils/logger";
 
-export const openDomainCommand = commands.registerCommand('surge-deploy.open-domain', async (hostname: string | undefined) => {
+export const openDomainCommand = commands.registerCommand('surge-volt.open-domain', async (hostname: string | undefined) => {
     let url = null;
     if (hostname) {
         url = `https://${hostname}.surge.sh`;

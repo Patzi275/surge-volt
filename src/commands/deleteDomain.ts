@@ -6,7 +6,7 @@ import { SurgeDomain } from "../types/SurgeDomain";
 import logger from "../utils/logger";
 import Storage from "../services/storageService";
 
-export const deleteDomainCommand = commands.registerCommand('surge-deploy.delete-domain', async (domain: SurgeDomain | null) => {
+export const deleteDomainCommand = commands.registerCommand('surge-volt.delete-domain', async (domain: SurgeDomain | null) => {
     let domainName: MaybeString;
 
     if (!domain) {
@@ -64,7 +64,7 @@ export const deleteDomainCommand = commands.registerCommand('surge-deploy.delete
     });
 
     if (done) {
-        commands.executeCommand('surge-deploy.refresh-domain-list');
+        commands.executeCommand('surge-volt.refresh-domain-list');
         window.showInformationMessage(`Domain "${domainName}.surge.sh" deleted successfully`);
     }
 

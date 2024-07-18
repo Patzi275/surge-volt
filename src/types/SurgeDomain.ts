@@ -12,7 +12,7 @@ export class SurgeDomain extends TreeItem {
         this.tooltip = 'Open';
         this.description = this.timeAgo;
         this.command = {
-            command: 'surge-deploy.open-domain',
+            command: 'surge-volt.open-domain',
             title: 'Open Domain',
             arguments: [hostname]
         };

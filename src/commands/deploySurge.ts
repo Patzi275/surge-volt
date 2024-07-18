@@ -6,7 +6,7 @@ import { SurgeDomain } from '../types/SurgeDomain';
 import logger from '../utils/logger';
 import Storage from '../services/storageService';
 
-export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy', async (domain: SurgeDomain | undefined) => {
+export const deploySurgeCommand = commands.registerCommand('surge-volt.deploy', async (domain: SurgeDomain | undefined) => {
     logger.debug("Surge domain", domain);
     const folderPath = getWorkspaceFolder();
     let domainName: MaybeString = randomDomainName() + '.surge.sh';
@@ -77,7 +77,7 @@ export const deploySurgeCommand = commands.registerCommand('surge-deploy.deploy'
     });
 
     if (done) {
-        commands.executeCommand('surge-deploy.refresh-domain-list');
+        commands.executeCommand('surge-volt.refresh-domain-list');
         const action = await window.showInformationMessage(`Successfully deployed "${projectName}" project on surge`, 'Open', 'Copy', 'Close');
         if (action === 'Open') {
             env.openExternal(Uri.parse(`http://${domainName}`));
