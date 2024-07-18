@@ -12,7 +12,7 @@ class PublishedDomainProvider implements TreeDataProvider<SurgeDomain> {
     getChildren(): Thenable<SurgeDomain[]> {
         return new Promise((resolve, reject) => {
             surgeService.list().then((data) => {
-                resolve(data);
+                resolve([]);
             }).catch(reject);
         });
     }

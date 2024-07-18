@@ -14,6 +14,11 @@
   "contributes": {
     "commands": [
       {
+        "command": "surge-deploy.install",
+        "category": "Surge",
+        "title": "Install Surge"
+      },
+      {
         "command": "surge-deploy.deploy",
         "category": "Surge",
         "title": "Deploy",
@@ -68,7 +73,13 @@
     "viewsWelcome": [
       {
         "view": "surge-default",
-        "contents": "No Surge project found.\n[Add Dependency](command:nodeDependencies.addEntry)"
+        "contents": "Install Surge to get started, a static web publishing tool. Learn more on [surge.sh](https://surge.sh/).\n[Install Surge](command:surge-deploy.install)\nAfter installing, log in to your account to start deploying your projects.",
+        "when": "surgeInstalled"
+      },
+      {
+        "view": "surge-default",
+        "contents": "Voila",
+        "when": "!surgeLoggedIn"
       }
     ],
     "menus": {
@@ -100,6 +111,10 @@
         {
           "command": "surge-deploy.deploy-on-existing",
           "when": "false"
+        },
+        {
+          "command": "surge-deploy.install",
+          "when": "!surgeInstalled"
         }
       ]
     }
