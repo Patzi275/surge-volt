@@ -1,4 +1,4 @@
-import { commands, env, ProgressLocation, Uri, window, workspace } from 'vscode';
+import { commands, env, ProgressLocation, Uri, window } from 'vscode';
 import { surgeService } from '../services/surgeService';
 import { MaybeString } from '../types';
 import { extractNameOnly, getWorkspaceFolder, randomDomainName } from '../utils';
@@ -6,7 +6,7 @@ import { SurgeDomain } from '../types/SurgeDomain';
 import logger from '../utils/logger';
 import Storage from '../services/storageService';
 
-export const deploySurgeCommand = commands.registerCommand('surge-volt.deploy', async (domain: SurgeDomain | undefined) => {
+export const deployCommand = commands.registerCommand('surge-volt.deploy', async (domain: SurgeDomain | undefined) => {
     logger.debug("Surge domain", domain);
     const folderPath = getWorkspaceFolder();
     let domainName: MaybeString = randomDomainName() + '.surge.sh';
