@@ -14,7 +14,7 @@ export const deleteAccountCommand = commands.registerCommand('surge-volt.delete-
                     return 'The email is required';
                 } else if (!value.includes('@')) {
                     return 'Invalid email';
-                } else if (Storage.getSurgeAccount(value) === undefined) {
+                } else if (Storage.getSurgeAccount(value) !== undefined) {
                     return 'Account already exists';
                 }
                 return null;

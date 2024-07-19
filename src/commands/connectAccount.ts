@@ -21,7 +21,7 @@ export const connectAccountCommand = commands.registerCommand('surge-volt.connec
                     return 'The email is required';
                 } else if (!value.includes('@')) {
                     return 'Invalid email';
-                } else if (Storage.getSurgeAccount(value) === undefined) {
+                } else if (Storage.getSurgeAccount(value) !== undefined) {
                     return 'Account already exists';
                 }
                 return null;
@@ -69,7 +69,7 @@ export const connectAccountCommand = commands.registerCommand('surge-volt.connec
                 return true;
             } catch (error: any) {
                 if (token.isCancellationRequested) { return false; }
-                const action = await window.showErrorMessage('Error adding account', { detail: error.message }, 'Retry', 'Cancel');
+                const action = await window.showErrorMessage(`Error adding account: ${error.message}`, { detail: error }, 'Retry', 'Cancel');
                 if (action !== 'Retry') { return false; }
             }
         }

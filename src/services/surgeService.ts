@@ -79,53 +79,56 @@ class SurgeService {
     }
 
     async authenticate(email: string, password: string): Promise<SurgeAccount | null> {
-        logger.info('Authenticating');
-        try {
+        return new Promise((resolve, reject) => {
             const surge = cp.spawn('surge', ['login']);
             this.authProcess = surge;
-
-            surge.stdin.write(`${email}\n`);
-            surge.stdin.write(`${password}\n`);
-            surge.stdin.end();
-
-            let isLoggedIn = false;
-            let errorOutput = '';
+            let passwordTry = 0;
+            let output = '';
+            logger.debug(`Authenticating ${email} ${password}; Process ID: ${surge.pid}`);
 
             surge.stdout.on('data', (data) => {
-                const output = data.toString();
-                // Check for successful login message
-                if (output.includes('Success')) {
-                    isLoggedIn = true;
+                const dataStr = data.toString();
+                output += dataStr;
+
+                if (dataStr.includes('email:')) {
+                    surge.stdin.write(`${email}\n`);
+                    logger.info('Email written');
+                } else if (dataStr.includes('password:')) {
+                    passwordTry++;
+                    logger.info('Password try:', passwordTry);
+                    if (passwordTry > 1) {
+                        logger.error('[FAIL] Password try limit reached');
+                        surge.stdin.end();
+                        this.authProcess = null;
+                        reject(new Error("Invalid email or password"));
+                    } else {
+                        surge.stdin.write(`${password}\n`);
+                        logger.info(`Password written for the ${passwordTry} time`);
+                    }
+                } else if (dataStr.includes('Success')) {
+                    logger.info("Login success");
+                    surge.stdin.end();
+                    this.authProcess = null;
+                    resolve(new SurgeAccount(email, password));
                 }
             });
 
             surge.stderr.on('data', (data) => {
-                errorOutput += data.toString();
+                output += data.toString();
             });
 
-            await new Promise((resolve, reject) => {
-                surge.on('close', (code) => {
+            surge.on('close', (code) => {
+                if (code !== 0 && !output.includes('Success')) {
                     this.authProcess = null;
-                    if (code === 0 && isLoggedIn) {
-                        logger.info('Logged in');
-                        resolve(new SurgeAccount(email, password));
-                    } else {
-                        let errorMessage = '';
-                        if (errorOutput) {
-                            errorMessage = `Error logging in: ${errorOutput}`;
-                        } else {
-                            errorMessage = code === 0 ? 'Incorrect email or password' : `Exit code ${code}`;
-                        }
-                        logger.error(errorMessage);
-                        reject(new Error(errorMessage));
-                    }
-                });
+                    reject(new Error(`Login failed with output: ${output}`));
+                }
             });
-        } catch (error) {
-            logger.error('Unexpected error during authentication:', error);
-            throw error; 
-        }
-        return null;
+
+            surge.on('error', (error) => {
+                this.authProcess = null;
+                reject(new Error('Proccess error: ' + error.message));
+            });
+        });
     }
 }
 
