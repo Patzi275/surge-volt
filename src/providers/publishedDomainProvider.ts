@@ -1,4 +1,4 @@
-import { commands, EventEmitter, ExtensionContext, TreeDataProvider, TreeItem, workspace } from "vscode";
+import { EventEmitter, TreeDataProvider, TreeItem } from "vscode";
 import { surgeService } from "../services/surgeService";
 import { SurgeDomain } from "../types/SurgeDomain";
 
@@ -12,7 +12,7 @@ class PublishedDomainProvider implements TreeDataProvider<SurgeDomain> {
     getChildren(): Thenable<SurgeDomain[]> {
         return new Promise((resolve, reject) => {
             surgeService.list().then((data) => {
-                resolve([]);
+                resolve(data);
             }).catch(reject);
         });
     }

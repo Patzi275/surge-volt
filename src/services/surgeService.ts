@@ -2,17 +2,13 @@ import * as cp from 'child_process';
 import { SurgeDomain } from '../types/SurgeDomain';
 import logger from '../utils/logger';
 import Storage from './storageService';
-
-type Domain = {
-    id: string,
-    hostname: string,
-    timeAgo: string
-}
+import { SurgeAccount } from '../types/SurgeAccount';
 
 class SurgeService {
     private listingProcess: cp.ChildProcess | null = null;
     private deployingProcess: cp.ChildProcess | null = null;
     private teardownProcess: cp.ChildProcess | null = null;
+    private authProcess: cp.ChildProcess | null = null;
 
     async deploy(folderPath: string, domainName: string): Promise<void> {
         const domain = domainName + '.surge.sh';
@@ -29,7 +25,7 @@ class SurgeService {
         });
     }
 
-    cancel(name : 'deploying' | 'listing' | 'teardown') {
+    cancel(name: 'deploying' | 'listing' | 'teardown' | 'authentication'): void {
         if (name === 'deploying' && this.deployingProcess) {
             logger.info('Cancelling deployment process');
             this.deployingProcess.kill();
@@ -42,6 +38,10 @@ class SurgeService {
             logger.info('Cancelling teardown process');
             this.teardownProcess.kill();
             this.teardownProcess = null;
+        } else if (name === 'authentication' && this.authProcess) {
+            logger.info('Cancelling auth process');
+            this.authProcess.kill();
+            this.authProcess = null;
         } else {
             logger.warn(`No ${name} process to cancel`);
         }
@@ -59,12 +59,12 @@ class SurgeService {
 
     async teardown(name: string): Promise<void> {
         logger.info(`Tearing down ${name}`);
-        const surge = cp.spawn('surge', ['teardown']);
-        this.teardownProcess = surge;
-        surge.stdin.write(`${name}.surge.sh\n`);
-        surge.stdin.end();
-
         return new Promise((resolve, reject) => {
+            const surge = cp.spawn('surge', ['teardown']);
+            this.teardownProcess = surge;
+            surge.stdin.write(`${name}.surge.sh\n`);
+            surge.stdin.end();
+
             surge.on('close', (code) => {
                 if (code === 0) {
                     logger.info(`Domain ${name} torn down`);
@@ -76,6 +76,56 @@ class SurgeService {
                 this.teardownProcess = null;
             });
         });
+    }
+
+    async authenticate(email: string, password: string): Promise<SurgeAccount | null> {
+        logger.info('Authenticating');
+        try {
+            const surge = cp.spawn('surge', ['login']);
+            this.authProcess = surge;
+
+            surge.stdin.write(`${email}\n`);
+            surge.stdin.write(`${password}\n`);
+            surge.stdin.end();
+
+            let isLoggedIn = false;
+            let errorOutput = '';
+
+            surge.stdout.on('data', (data) => {
+                const output = data.toString();
+                // Check for successful login message
+                if (output.includes('Success')) {
+                    isLoggedIn = true;
+                }
+            });
+
+            surge.stderr.on('data', (data) => {
+                errorOutput += data.toString();
+            });
+
+            await new Promise((resolve, reject) => {
+                surge.on('close', (code) => {
+                    this.authProcess = null;
+                    if (code === 0 && isLoggedIn) {
+                        logger.info('Logged in');
+                        resolve(new SurgeAccount(email, password));
+                    } else {
+                        let errorMessage = '';
+                        if (errorOutput) {
+                            errorMessage = `Error logging in: ${errorOutput}`;
+                        } else {
+                            errorMessage = code === 0 ? 'Incorrect email or password' : `Exit code ${code}`;
+                        }
+                        logger.error(errorMessage);
+                        reject(new Error(errorMessage));
+                    }
+                });
+            });
+        } catch (error) {
+            logger.error('Unexpected error during authentication:', error);
+            throw error; 
+        }
+        return null;
     }
 }
 

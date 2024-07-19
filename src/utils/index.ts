@@ -1,4 +1,4 @@
-import { adjectives, animals, colors, Config, uniqueNamesGenerator } from "unique-names-generator"
+import { adjectives, animals, colors, Config, uniqueNamesGenerator } from "unique-names-generator";
 import { workspace } from "vscode";
 import { MaybeString } from "../types";
 
@@ -27,4 +27,4 @@ export const extractNameOnly = (domain: string) => {
         domainName = domainName.replace('http://', '');
     }
     return domainName;
-}
+};

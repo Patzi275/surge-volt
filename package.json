@@ -13,7 +13,7 @@
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
-      {
+       {
         "command": "surge-volt.install",
         "category": "Surge",
         "title": "Install Surge"
@@ -51,6 +51,26 @@
         "category": "Surge",
         "title": "Delete domain",
         "icon": "$(trash)"
+      },
+
+
+      {
+        "command": "surge-volt.refresh-account-list",
+        "category": "Surge",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "surge-volt.delete-account",
+        "category": "Surge",
+        "title": "Delete account",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "surge-volt.connect-account",
+        "category": "Surge",
+        "title": "Connect account",
+        "icon": "$(add)"
       }
     ],
     "viewsContainers": {
@@ -63,27 +83,28 @@
       ]
     },
     "views": {
-      "surge-control": [
+      "surge-control": [ {
+          "id": "surge-default",
+          "name": "Welcome",
+          "when": "!surge-volt.surge:installed"
+        },
         {
           "id": "surge-accounts",
-          "name": "Accounts"
+          "name": "Accounts",
+          "when": "!initializing && surge-volt.surge:installed"
         },
         {
           "id": "surge-domains",
-          "name": "Domains"
+          "name": "Domains",
+          "when": "!initializing && surge-volt.surge:installed"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "surge-domains",
-        "contents": "Install Surge to get started, a static web publishing tool. Learn more on [surge.sh](https://surge.sh/).\n[Install Surge](command:surge-volt.install)\nAfter installing, log in to your account to start deploying your projects.",
-        "when": "surgeInstalled"
-      },
-      {
-        "view": "surge-domains",
-        "contents": "Voila",
-        "when": "!surgeLoggedIn"
+        "view": "surge-default",
+        "contents": "Install Surge to get started, a static web publishing tool. Learn more on [surge.sh](https://surge.sh/).\n[Install Surge](command:surge-volt.install)\nAfter installing, [reload the window](command:workbench.action.reloadWindow) and log in to your account to start deploying your projects.",
+        "when": "surge-volt:ready && !surge-volt.surge:installed"
       }
     ],
     "menus": {
@@ -97,6 +118,16 @@
           "command": "surge-volt.deploy",
           "when": "view == surge-domains",
           "group": "navigation"
+        },
+        {
+          "command": "surge-volt.refresh-account-list",
+          "when": "view == surge-accounts",
+          "group": "navigation"
+        },
+        {
+          "command": "surge-volt.connect-account",
+          "when": "view == surge-accounts",
+          "group": "navigation"
         }
       ],
       "view/item/context": [
@@ -109,6 +140,11 @@
           "command": "surge-volt.delete-domain",
           "when": "view == surge-domains",
           "group": "inline@2"
+        },
+        {
+          "command": "surge-volt.delete-account",
+          "when": "view == surge-accounts",
+          "group": "inline"
         }
       ],
       "commandPalette": [
@@ -118,7 +154,7 @@
         },
         {
           "command": "surge-volt.install",
-          "when": "!surgeInstalled"
+          "when": "!surge-volt.surge:installed"
         }
       ]
     }

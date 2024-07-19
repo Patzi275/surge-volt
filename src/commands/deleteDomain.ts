@@ -3,7 +3,6 @@ import { surgeService } from "../services/surgeService";
 import { MaybeString } from "../types";
 import { extractNameOnly } from "../utils";
 import { SurgeDomain } from "../types/SurgeDomain";
-import logger from "../utils/logger";
 import Storage from "../services/storageService";
 
 export const deleteDomainCommand = commands.registerCommand('surge-volt.delete-domain', async (domain: SurgeDomain | null) => {

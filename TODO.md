@@ -3,3 +3,4 @@
 - Manage multiple accounts
 - Rename feature (download and upload on new domain while deleting the previous)
 - Add command deploy directory (in the project)
+- Use secret storage for account password
