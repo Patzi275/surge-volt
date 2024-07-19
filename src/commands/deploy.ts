@@ -8,9 +8,11 @@ import Storage from '../services/storageService';
 
 export const deployCommand = commands.registerCommand('surge-volt.deploy', async (domain: SurgeDomain | undefined) => {
     logger.info("deployCommand:", domain);
-    const folderPath = getWorkspaceFolder();
     let domainName: MaybeString = randomDomainName() + '.surge.sh';
-
+    
+    
+    
+    const folderPath = getWorkspaceFolder();
     if (!folderPath) {
         logger.warn("deployCommand:", 'No project folder opened');
         const action = await window.showErrorMessage("Please open the project folder before", "Open Folder");
@@ -20,6 +22,12 @@ export const deployCommand = commands.registerCommand('surge-volt.deploy', async
         return;
     }
 
+    const isAuthenticated = await surgeService.whoami();
+    if (!isAuthenticated) {
+        window.showErrorMessage("Please connect at least one account before");
+        return;
+    }
+    
     const projectName = folderPath.split('/').pop();
 
     if (domain) {

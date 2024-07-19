@@ -48,8 +48,9 @@ export const connectAccountCommand = commands.registerCommand('surge-volt.connec
     if (done) {
         if (!isNew) {
             commands.executeCommand('surge-volt.refresh-account-list');
+            commands.executeCommand('surge-volt.refresh-domain-list');
+            commands.executeCommand('setContext', 'surge-volt.surge:connected', true);
         }
-        commands.executeCommand('surge-volt.refresh-domain-list').then(() => logger.log('---', JSON.stringify(Storage.getSelectedSurgeAccount())));
         return true;
     }
 

@@ -14,8 +14,8 @@ export const deleteAccountCommand = commands.registerCommand('surge-volt.delete-
                     return 'The email is required';
                 } else if (!value.includes('@')) {
                     return 'Invalid email';
-                } else if (Storage.getSurgeAccount(value) !== undefined) {
-                    return 'Account already exists';
+                } else if (Storage.getSurgeAccount(value) === undefined) {
+                    return 'Account do not exists';
                 }
                 return null;
             }
@@ -36,7 +36,11 @@ export const deleteAccountCommand = commands.registerCommand('surge-volt.delete-
         return;
     }
 
-     const done = await window.withProgress({
+    if (Storage.getSelectedSurgeAccount()?.email === email) {
+        await commands.executeCommand('surge-volt.disconnect-account', false);
+    }
+
+    const done = await window.withProgress({
         location: ProgressLocation.Window,
         title: `Deleting account...`,
         cancellable: true

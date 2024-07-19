@@ -75,6 +75,12 @@
         "category": "Surge",
         "title": "Connect new account",
         "icon": "$(add)"
+      },
+      {
+        "command": "surge-volt.disconnect-account",
+        "category": "Surge",
+        "title": "Disconnect account",
+        "icon": "$(sign-out)"
       }
     ],
     "viewsContainers": {
@@ -96,12 +102,12 @@
         {
           "id": "surge-accounts",
           "name": "Accounts",
-          "when": "!initializing && surge-volt.surge:installed"
+          "when": "surge-volt.surge:installed"
         },
         {
           "id": "surge-domains",
           "name": "Domains",
-          "when": "!initializing && surge-volt.surge:installed"
+          "when": "surge-volt.surge:installed"
         }
       ]
     },
@@ -110,6 +116,16 @@
         "view": "surge-default",
         "contents": "Install Surge to get started, a static web publishing tool. Learn more on [surge.sh](https://surge.sh/).\n[Install Surge](command:surge-volt.install)\nAfter installing, [reload the window](command:workbench.action.reloadWindow) and log in to your account to start deploying your projects.",
         "when": "surge-volt:ready && !surge-volt.surge:installed"
+      },
+      {
+        "view": "surge-accounts",
+        "contents": "Connect your Surge account to start deploying your projects.\n[Connect account](command:surge-volt.connect-new-account)",
+        "when": "surge-volt.surge:installed && surge-volt:ready && surge-volt:no-account"
+      },
+      {
+        "view": "surge-domains",
+        "contents": "Deploy your projects to a custom domain.\n[Deploy](command:surge-volt.deploy)",
+        "when": "surge-volt.surge:installed && surge-volt:ready"
       }
     ],
     "menus": {
@@ -127,12 +143,17 @@
         {
           "command": "surge-volt.refresh-account-list",
           "when": "view == surge-accounts",
-          "group": "navigation"
+          "group": "navigation@2"
         },
         {
           "command": "surge-volt.connect-new-account",
           "when": "view == surge-accounts",
-          "group": "navigation"
+          "group": "navigation@1"
+        },
+        {
+          "command": "surge-volt.disconnect-account",
+          "when": "view == surge-accounts",
+          "group": "navigation@3"
         }
       ],
       "view/item/context": [

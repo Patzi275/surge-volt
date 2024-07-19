@@ -35,11 +35,11 @@ export default class Storage {
         return this.getSurgeAccounts().find((a) => a.isSelected);
     }
 
-    static async setSelectedSurgeAccount(email: string): Promise<boolean> {
+    static async setSelectedSurgeAccount(email: string | null): Promise<boolean> {
         logger.debug("Storage: New selected account", email);
         const accounts = this.getSurgeAccounts();
         const newAccounts = accounts.map((a: SurgeAccount) => {
-            a.setSelected(a.email === email);
+            a.setSelected(email !== null && a.email === email);
             return a;
         });
         await this.setSurgeAccounts(newAccounts);

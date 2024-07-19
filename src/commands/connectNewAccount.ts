@@ -34,8 +34,8 @@ export const connectNewAccountCommand = commands.registerCommand('surge-volt.con
     const done = await commands.executeCommand('surge-volt.connect-account', newAccount, true);
 
     if (done) {
-        newAccount.setSelected(true);
         await Storage.addSurgeAccount(newAccount);
+        await Storage.setSelectedSurgeAccount(email);
         window.showInformationMessage('Account logged-in/created & saved successfully.');
         commands.executeCommand('surge-volt.refresh-account-list');
     }

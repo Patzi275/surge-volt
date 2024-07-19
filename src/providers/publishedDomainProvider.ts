@@ -1,4 +1,4 @@
-import { EventEmitter, TreeDataProvider, TreeItem } from "vscode";
+import { commands, EventEmitter, TreeDataProvider, TreeItem } from "vscode";
 import { surgeService } from "../services/surgeService";
 import { SurgeDomain } from "../types/SurgeDomain";
 

@@ -49,8 +49,20 @@ class SurgeService {
 
     async list(): Promise<SurgeDomain[]> {
         logger.info('SurgeService: Domain list extraction');
+
+        const isAuthenticated = await this.whoami();
+        if (!isAuthenticated) {
+            logger.info('SurgeService: User not authenticated, returning empty array');
+            return [];
+        }
+
         return new Promise((resolve, reject) => {
-            this.listingProcess = cp.exec(`surge list`, (error, stdout, stderr) => {
+            this.listingProcess = cp.exec('surge list', (error, stdout, stderr) => {
+                if (error) {
+                    logger.error('SurgeService: Failed to list domains', error);
+                    return reject(error);
+                }
+
                 const elements = extractDomainData(stdout);
                 logger.info('SurgeService: Extracted domains - ' + elements.length);
                 Storage.setSurgeDomains(elements).then(() => resolve(elements));
@@ -128,6 +140,37 @@ class SurgeService {
             surge.on('error', (error) => {
                 this.authProcess = null;
                 reject(new Error('Proccess error: ' + error.message));
+            });
+        });
+    }
+
+    async whoami(): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            const process = cp.exec('surge whoami', (error, stdout, stderr) => {
+                if (stdout.includes('Not Authenticated')) {
+                    logger.info('SurgeService: Not Authenticated');
+                    resolve(false);
+                } else {
+                    resolve(true);
+                }
+            });
+
+            process.on('error', (error) => {
+                logger.error('SurgeService: whoami command failed', error);
+                resolve(false);
+            });
+        });
+    }
+
+    async logout(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const surge = cp.spawn('surge', ['logout']);
+            surge.on('close', (code) => {
+                if (code === 0) {
+                    resolve();
+                } else {
+                    reject(new Error(`Exit code ${code}`));
+                }
             });
         });
     }
