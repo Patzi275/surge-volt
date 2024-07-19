@@ -6,7 +6,7 @@ import { surgeService } from "../services/surgeService";
 import logger from "../utils/logger";
 
 export const connectAccountCommand = commands.registerCommand('surge-volt.connect-account', async (param: SurgeAccount | undefined) => {
-    logger.info('Connect account');
+    logger.info('connectAccountCommand:', param);
 
     let isNew = false;
     let email: MaybeString;
@@ -45,9 +45,6 @@ export const connectAccountCommand = commands.registerCommand('surge-volt.connec
         email = param.email;
         password = param.password;
     }
-
-
-    logger.debug('Email', email, '\nPassword', password);
 
     const done = await window.withProgress({
         location: ProgressLocation.Window,

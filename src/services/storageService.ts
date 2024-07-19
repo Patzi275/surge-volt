@@ -1,6 +1,5 @@
 import { commands, ExtensionContext } from "vscode";
 import { SurgeDomain } from "../types/SurgeDomain";
-import logger from "../utils/logger";
 import { SurgeAccount } from "../types/SurgeAccount";
 
 export default class Storage {

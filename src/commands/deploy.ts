@@ -7,12 +7,12 @@ import logger from '../utils/logger';
 import Storage from '../services/storageService';
 
 export const deployCommand = commands.registerCommand('surge-volt.deploy', async (domain: SurgeDomain | undefined) => {
-    logger.debug("Surge domain", domain);
+    logger.info("deployCommand:", domain);
     const folderPath = getWorkspaceFolder();
     let domainName: MaybeString = randomDomainName() + '.surge.sh';
 
     if (!folderPath) {
-        logger.warn('No project folder opened');
+        logger.warn("deployCommand:", 'No project folder opened');
         const action = await window.showErrorMessage("Please open the project folder before", "Open Folder");
         if (action === 'Open Folder') {
             commands.executeCommand('vscode.openFolder');
@@ -62,7 +62,7 @@ export const deployCommand = commands.registerCommand('surge-volt.deploy', async
     }, async (progress, token) => {
         token.onCancellationRequested(() => surgeService.cancel('deploying'));
 
-        logger.info(`Deploying project ${projectName} to ${domainName}.surge.sh`);
+        logger.info(`deployCommand: Deploying project ${projectName} to ${domainName}.surge.sh`);
 
         while (true) {
             try {

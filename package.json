@@ -13,7 +13,7 @@
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
-       {
+      {
         "command": "surge-volt.install",
         "category": "Surge",
         "title": "Install Surge"
@@ -52,8 +52,6 @@
         "title": "Delete domain",
         "icon": "$(trash)"
       },
-
-
       {
         "command": "surge-volt.refresh-account-list",
         "category": "Surge",
@@ -83,7 +81,8 @@
       ]
     },
     "views": {
-      "surge-control": [ {
+      "surge-control": [
+        {
           "id": "surge-default",
           "name": "Welcome",
           "when": "!surge-volt.surge:installed"

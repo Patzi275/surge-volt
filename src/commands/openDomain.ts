@@ -21,6 +21,6 @@ export const openDomainCommand = commands.registerCommand('surge-volt.open-domai
         url = input;
     }
 
-    logger.info('Opening domain: ' + url);
+    logger.info('openDomainCommand: ' + url);
     await env.openExternal(Uri.parse(url));
 });

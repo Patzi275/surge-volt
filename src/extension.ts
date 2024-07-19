@@ -50,26 +50,26 @@ function initContextVariables() {
 
 	exec('surge --version', (error, stdout, stderr) => {
 		if (error) {
-			logger.error('Surge CLI not found');
+			logger.error('INIT: Surge CLI not found');
 			commands.executeCommand('setContext', 'surge-volt.surge:installed', false);
 		} else {
-			logger.info('Surge CLI found');
+			logger.info('INIT: Surge CLI found');
 			commands.executeCommand('setContext', 'surge-volt.surge:installed', true);
 
 			exec('surge whoami', (error, stdout, stderr) => {
 				if (error) {
-					logger.error('Not logged in');
+					logger.error('INIT: Not logged in');
 					commands.executeCommand('setContext', 'surge-volt.surge:connected', false);
 				} else {
-					logger.info('Logged in');
+					logger.info('INIT: Logged in');
 					commands.executeCommand('setContext', 'surge-volt.surge:connected', true);
 
 					const accounts = Storage.getSurgeAccounts();
 					if (!accounts || accounts.length === 0) {
-						logger.info("No account found in storage");
+						logger.info("INIT: No account found in storage");
 						commands.executeCommand('setContext', 'surge-volt:no-account', true);
 					} else {
-						logger.info("Accounts found in storage");
+						logger.info("INIT: Accounts found in storage");
 						commands.executeCommand('setContext', 'surge-volt:no-account', false);
 					}
 				}

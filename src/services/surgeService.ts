@@ -27,28 +27,28 @@ class SurgeService {
 
     cancel(name: 'deploying' | 'listing' | 'teardown' | 'authentication'): void {
         if (name === 'deploying' && this.deployingProcess) {
-            logger.info('Cancelling deployment process');
+            logger.info('SurgeService: Cancelling deployment process');
             this.deployingProcess.kill();
             this.deployingProcess = null;
         } else if (name === 'listing' && this.listingProcess) {
-            logger.info('Cancelling listing process');
+            logger.info('SurgeService: Cancelling listing process');
             this.listingProcess.kill();
             this.listingProcess = null;
         } else if (name === 'teardown' && this.teardownProcess) {
-            logger.info('Cancelling teardown process');
+            logger.info('SurgeService: Cancelling teardown process');
             this.teardownProcess.kill();
             this.teardownProcess = null;
         } else if (name === 'authentication' && this.authProcess) {
-            logger.info('Cancelling auth process');
+            logger.info('SurgeService: Cancelling auth process');
             this.authProcess.kill();
             this.authProcess = null;
         } else {
-            logger.warn(`No ${name} process to cancel`);
+            logger.warn(`SurgeService: No ${name} process to cancel`);
         }
     }
 
     async list(): Promise<SurgeDomain[]> {
-        logger.info('Domain list extraction');
+        logger.info('SurgeService: Domain list extraction');
         return new Promise((resolve, reject) => {
             this.listingProcess = cp.exec(`surge list`, (error, stdout, stderr) => {
                 const elements = extractDomainData(stdout);
@@ -58,7 +58,7 @@ class SurgeService {
     }
 
     async teardown(name: string): Promise<void> {
-        logger.info(`Tearing down ${name}`);
+        logger.info(`SurgeService: Tearing down ${name}`);
         return new Promise((resolve, reject) => {
             const surge = cp.spawn('surge', ['teardown']);
             this.teardownProcess = surge;
@@ -67,10 +67,10 @@ class SurgeService {
 
             surge.on('close', (code) => {
                 if (code === 0) {
-                    logger.info(`Domain ${name} torn down`);
+                    logger.info(`SurgeService: Domain ${name} torn down`);
                     resolve();
                 } else {
-                    logger.error(`Error tearing down domain ${name}`);
+                    logger.error(`SurgeService: Error tearing down domain ${name}`);
                     reject(new Error(`Exit code ${code}`));
                 }
                 this.teardownProcess = null;
@@ -84,7 +84,7 @@ class SurgeService {
             this.authProcess = surge;
             let passwordTry = 0;
             let output = '';
-            logger.debug(`Authenticating ${email} ${password}; Process ID: ${surge.pid}`);
+            logger.debug(`SurgeService: Authenticating ${email} ${password}; Process ID: ${surge.pid}`);
 
             surge.stdout.on('data', (data) => {
                 const dataStr = data.toString();
@@ -92,21 +92,21 @@ class SurgeService {
 
                 if (dataStr.includes('email:')) {
                     surge.stdin.write(`${email}\n`);
-                    logger.info('Email written');
+                    logger.info('SurgeService: Email written');
                 } else if (dataStr.includes('password:')) {
                     passwordTry++;
-                    logger.info('Password try:', passwordTry);
+                    logger.info('SurgeService: Password try', passwordTry);
                     if (passwordTry > 1) {
-                        logger.error('[FAIL] Password try limit reached');
+                        logger.error('SurgeService: [FAIL] Password try limit reached');
                         surge.stdin.end();
                         this.authProcess = null;
                         reject(new Error("Invalid email or password"));
                     } else {
                         surge.stdin.write(`${password}\n`);
-                        logger.info(`Password written for the ${passwordTry} time`);
+                        logger.info(`SurgeService: Password written for the ${passwordTry} time`);
                     }
                 } else if (dataStr.includes('Success')) {
-                    logger.info("Login success");
+                    logger.info("SurgeService: Login success");
                     surge.stdin.end();
                     this.authProcess = null;
                     resolve(new SurgeAccount(email, password));
