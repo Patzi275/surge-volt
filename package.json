@@ -69,6 +69,12 @@
         "category": "Surge",
         "title": "Connect account",
         "icon": "$(add)"
+      },
+      {
+        "command": "surge-volt.connect-new-account",
+        "category": "Surge",
+        "title": "Connect new account",
+        "icon": "$(add)"
       }
     ],
     "viewsContainers": {
@@ -124,7 +130,7 @@
           "group": "navigation"
         },
         {
-          "command": "surge-volt.connect-account",
+          "command": "surge-volt.connect-new-account",
           "when": "view == surge-accounts",
           "group": "navigation"
         }

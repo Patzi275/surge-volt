@@ -14,6 +14,7 @@ import { connectAccountCommand } from './commands/connectAccount';
 import { deleteAccountCommand } from './commands/deleteAccount';
 import { refreshAccountListCommand } from './commands/refreshAccountList';
 import { accountListTreeData } from './providers/accountListProvider';
+import { connectNewAccountCommand } from './commands/connectNewAccount';
 
 export function activate(context: ExtensionContext) {
 	logger.info('Congratulations, your extension "surge-volt" is now active!');
@@ -32,9 +33,10 @@ export function activate(context: ExtensionContext) {
 		deleteDomainCommand,
 
 		connectAccountCommand,
+		connectNewAccountCommand,
 		deleteAccountCommand,
 		refreshAccountListCommand,
-		
+
 		// tree data providers
 		window.registerTreeDataProvider('surge-domains', publishedDomainTreeData),
 		window.registerTreeDataProvider('surge-accounts', accountListTreeData),

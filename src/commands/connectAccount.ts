@@ -5,42 +5,16 @@ import { MaybeString } from "../types";
 import { surgeService } from "../services/surgeService";
 import logger from "../utils/logger";
 
-export const connectAccountCommand = commands.registerCommand('surge-volt.connect-account', async (param: SurgeAccount | undefined) => {
+export const connectAccountCommand = commands.registerCommand('surge-volt.connect-account', async (param: string | SurgeAccount, isNew: boolean = false) => {
     logger.info('connectAccountCommand:', param);
 
-    let isNew = false;
     let email: MaybeString;
     let password: MaybeString;
 
 
-    if (!param) {
-        email = await window.showInputBox({
-            prompt: 'Email',
-            validateInput: (value: string) => {
-                if (!value) {
-                    return 'The email is required';
-                } else if (!value.includes('@')) {
-                    return 'Invalid email';
-                } else if (Storage.getSurgeAccount(value) !== undefined) {
-                    return 'Account already exists';
-                }
-                return null;
-            }
-        });
-        if (!email) { return; }
-
-        password = await window.showInputBox({
-            prompt: 'Password',
-            password: true,
-            validateInput: (value: string) => {
-                if (!value) {
-                    return 'The password is required';
-                }
-                return null;
-            }
-        });
-        if (!password) { return; }
-        isNew = true;
+    if (typeof param === 'string') {
+        email = param;
+        password = Storage.getSurgeAccount(email)!.password;   
     } else {
         email = param.email;
         password = param.password;
@@ -48,7 +22,7 @@ export const connectAccountCommand = commands.registerCommand('surge-volt.connec
 
     const done = await window.withProgress({
         location: ProgressLocation.Window,
-        title: 'Adding account...',
+        title: `${isNew ? 'adding & ' : ''}connecting account...`,
         cancellable: true
     }, async (progress, token) => {
         token.onCancellationRequested(() => surgeService.cancel('authentication'));
@@ -59,24 +33,25 @@ export const connectAccountCommand = commands.registerCommand('surge-volt.connec
                 if (!account) {
                     throw new Error();
                 }
-                if (isNew) {
-                    await Storage.addSurgeAccount(account);
+                if (!isNew) {
+                    await Storage.setSelectedSurgeAccount(email);
                 }
-                await Storage.setSelectedSurgeAccount(email);
                 return true;
             } catch (error: any) {
                 if (token.isCancellationRequested) { return false; }
-                const action = await window.showErrorMessage(`Error adding account: ${error.message}`, { detail: error }, 'Retry', 'Cancel');
+                const action = await window.showErrorMessage(`Error connection to account: ${error.message}`, { detail: error }, 'Retry', 'Cancel');
                 if (action !== 'Retry') { return false; }
             }
         }
     });
 
     if (done) {
-        if (isNew) {
-            window.showInformationMessage('Account logged in or created successfully.');
+        if (!isNew) {
+            commands.executeCommand('surge-volt.refresh-account-list');
         }
-        commands.executeCommand('surge-volt.refresh-account-list');
-        commands.executeCommand('surge-volt.refresh-domain-list');
+        commands.executeCommand('surge-volt.refresh-domain-list').then(() => logger.log('---', JSON.stringify(Storage.getSelectedSurgeAccount())));
+        return true;
     }
+
+    return false;
 });

@@ -7,7 +7,7 @@ export class SurgeAccount extends TreeItem {
         public password: string,
         public readonly collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None,
         public isDefault: boolean = false,
-        public selected: boolean = false
+        public isSelected: boolean = false
     ) {
         super(email, collapsibleState);
         this.tooltip = 'Connect';
@@ -16,22 +16,14 @@ export class SurgeAccount extends TreeItem {
             title: 'Connect Account',
             arguments: [email]
         };
+        this.setSelected(isSelected);
     }
 
-    set isSelected(value: boolean) {
+    public setSelected(value: boolean) {
         this.iconPath = {
             light: path.join(__filename, '..', '..', 'resources', 'light', value ? 'circle-filled.svg' : 'account.svg'),
-            dark: path.join(__filename, '..', '..', 'resources', 'dark',  value ? 'circle-filled.svg' : 'account.svg'),
+            dark: path.join(__filename, '..', '..', 'resources', 'dark', value ? 'circle-filled.svg' : 'account.svg'),
         };
-        this.selected = value;
+        this.isSelected = value;
     }
-
-    get isSelected() {
-        return this.selected;
-    }
-
-    iconPath = {
-        light: path.join(__filename, '..', '..', 'resources', 'light', 'account.svg'),
-        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'account.svg'),
-    };
 }

@@ -52,6 +52,7 @@ class SurgeService {
         return new Promise((resolve, reject) => {
             this.listingProcess = cp.exec(`surge list`, (error, stdout, stderr) => {
                 const elements = extractDomainData(stdout);
+                logger.info('SurgeService: Extracted domains - ' + elements.length);
                 Storage.setSurgeDomains(elements).then(() => resolve(elements));
             });
         });
@@ -133,6 +134,10 @@ class SurgeService {
 }
 
 function extractDomainData(input: string): SurgeDomain[] {
+    if (input.includes('Empty')) {
+        return [];
+    }
+
     const lines = input.trim().split('\n');
 
     const data = lines.map(line => {
