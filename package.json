@@ -3,6 +3,7 @@
   "displayName": "surge-volt",
   "description": "",
   "version": "0.0.1",
+  "publisher": "zidev",
   "engines": {
     "vscode": "^1.91.0"
   },
