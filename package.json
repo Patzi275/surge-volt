@@ -1,7 +1,7 @@
 {
   "name": "surge-volt",
   "version": "0.0.1",
-  "publisher": "zidev",
+  "publisher": "PatrickZocli",
   "displayName": "Surge Volt",
   "description": "Publish your static web projects and manage your Surge account from within Visual Studio Code.",
   "license": "MIT",
