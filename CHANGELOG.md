@@ -1,9 +1,7 @@
 # Change Log
 
-All notable changes to the "surge-volt" extension will be documented in this file.
+## [0.0.1] - 2024-07-20
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+- Initial release of Surge Volt.
+- Basic domain management and deployment functionality.
+- Account management features.

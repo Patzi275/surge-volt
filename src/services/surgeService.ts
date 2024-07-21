@@ -144,20 +144,21 @@ class SurgeService {
         });
     }
 
-    async whoami(): Promise<boolean> {
+    async whoami(): Promise<string | null> {
         return new Promise((resolve, reject) => {
             const process = cp.exec('surge whoami', (error, stdout, stderr) => {
-                if (stdout.includes('Not Authenticated')) {
-                    logger.info('SurgeService: Not Authenticated');
-                    resolve(false);
-                } else {
-                    resolve(true);
+                if (error) {
+                    logger.error('SurgeService: whoami command failed', error);
+                    return reject(error.message);
                 }
+
+                const email = extractEmail(stdout);
+                resolve(email);
             });
 
             process.on('error', (error) => {
                 logger.error('SurgeService: whoami command failed', error);
-                resolve(false);
+                reject(error.message);
             });
         });
     }
@@ -174,6 +175,15 @@ class SurgeService {
             });
         });
     }
+}
+
+function extractEmail(input: string): string | null {
+    input = input.replace(/\x1b\[[0-9;]*m/g, '').trim();
+    if (input === '' || input.includes('Not Authenticated')) {
+        return null;
+    }
+    const email = input.split(' ')[0];
+    return email;
 }
 
 function extractDomainData(input: string): SurgeDomain[] {
