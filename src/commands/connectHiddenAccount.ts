@@ -36,6 +36,7 @@ export const connectHiddenAccount = commands.registerCommand('surge-volt.connect
                 const accountAdded = await commands.executeCommand('surge-volt.connect-account', account, true);
                 if (accountAdded) {
                     window.showInformationMessage(`Account credentials updated for ${email}`);
+                    commands.executeCommand('surge-volt.refresh-domain-list');
                 }
                 break;
             }
