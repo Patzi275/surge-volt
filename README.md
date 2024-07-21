@@ -1,71 +1,61 @@
-# SURGE VOLT README
+# Surge Volt
 
-This is the README for your extension "surge-volt". After writing up a brief description, we recommend including the following sections.
+🚀 Integration of the Surge static web publishing tool into Visual Studio Code, enabling users to deploy projects directly from the editor.
+
+![Demo](resources/doc/demo.gif)
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- **Install Surge:** Easily install Surge from within VS Code.
+- **Deploy Projects:** Deploy new projects or update existing domains with ease.
+- **Manage Domains:** View, refresh, and delete your deployed domains.
+- **Account Management:** Connect, refresh, and manage multiple Surge accounts.
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- **Node.js** must be [installed](https://nodejs.org/en/download/) on your machine.
+- **Surge** must be installed, or it can be installed via the extension.
 
-## Extension Settings
+## Commands
+| Command | Description |
+|---|---|
+| Surge Volt: Install Surge | Installs Surge on your machine. (only required if Surge is not already installed) |
+| Surge Volt: Deploy | Deploys your project to a custom domain. |
+| Surge Volt: Deploy on this domain | Deploys your project on the specified domain. |
+| Surge Volt: Refresh Domain List | Refreshes the list of your Surge domains. |
+| Surge Volt: Open Domain | Opens the selected domain in your default browser. |
+| Surge Volt: Delete Domain | Deletes the selected domain from Surge. |
+| Surge Volt: Refresh Account List | Refreshes the list of your Surge accounts. |
+| Surge Volt: Delete Account | Deletes the selected Surge account. |
+| Surge Volt: Connect Account | Connects to the specified Surge account. |
+| Surge Volt: Connect New Account | Connects to a new Surge account. |
+| Surge Volt: Disconnect Account | Disconnects the currently connected Surge account. |
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+## Contributing and Feedback
+If you would like to contribute to this extension, please feel free to submit a pull request. If you have any feedback or suggestions, please feel free [to open an issue](https://github.com/Patzi275/surge-volt/issues/new/choose).
 
-For example:
+## License
+This extension is licensed under the [MIT License](LICENSE).
+
+<!-- ## Extension Settings
 
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+- `surge-volt.surge:installed`: Checks if Surge is installed.
+- `surge-volt:ready`: Indicates if the extension is ready for use.
+- `surge-volt:no-account`: Indicates if there are no connected accounts. -->
 
-## Known Issues
+<!-- ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- Users may encounter issues if Surge is not installed properly.
+- Authentication failures might require manual re-entry of credentials. -->
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.0.1
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+- Initial release of Surge Volt.
+- Basic domain management and deployment functionality.
+- Account management features.
 
 **Enjoy!**

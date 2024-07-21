@@ -1,9 +1,29 @@
 {
   "name": "surge-volt",
-  "displayName": "surge-volt",
-  "description": "",
   "version": "0.0.1",
   "publisher": "zidev",
+  "displayName": "Surge Volt",
+  "description": "Publish your static web projects and manage your Surge account from within Visual Studio Code.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Patzi275/surge-volt"
+  },
+  "category": [
+    "Other"
+  ],
+  "keywords": [
+    "surge",
+    "publish",
+    "deploy",
+    "static",
+    "web",
+    "site",
+    "project",
+    "account",
+    "management"
+  ],
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.91.0"
   },
