@@ -1,6 +1,6 @@
 {
   "name": "surge-volt",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "publisher": "PatrickZocli",
   "displayName": "Surge Volt",
   "description": "Publish your static web projects and manage your Surge account from within Visual Studio Code.",
