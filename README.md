@@ -1,4 +1,4 @@
-# Surge Volt
+# Surge Volt ![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/PatrickZocli.surge-volt) ![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/PatrickZocli.surge-volt)
 
 🚀 Integration of the Surge static web publishing tool into Visual Studio Code, enabling users to deploy projects directly from the editor.
 
