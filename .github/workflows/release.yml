@@ -32,6 +32,7 @@ jobs:
       - name: Run release script
         env:
           VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
-          # VSCE_PUBLISHER_NAME: ${{ secrets.VSCE_PUBLISHER_NAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNER: Patzi275
+          GITHUB_REPO: surge-volt
         run: npx semantic-release
