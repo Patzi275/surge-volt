@@ -198,7 +198,7 @@ function extractDomainData(input: string): SurgeDomain[] {
         const els = line.split(/\s+/);
         return new SurgeDomain(
             els[0], // id
-            els[1].replace('.surge.sh', ''), // hostname
+            els[0].replace('.surge.sh', ''), // hostname
             `${els[2]} ${els[3]} ${els[4]}`, //timeAgo
         );
     });
