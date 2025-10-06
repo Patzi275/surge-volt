@@ -33,6 +33,5 @@ jobs:
         env:
           VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_OWNER: Patzi275
-          GITHUB_REPO: surge-volt
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: npx semantic-release
