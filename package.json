@@ -244,6 +244,7 @@
   "dependencies": {
     "@types/loglevel": "^1.6.3",
     "loglevel": "^1.9.1",
-    "unique-names-generator": "^4.7.1"
+    "unique-names-generator": "^4.7.1",
+    "picomatch": "^4.0.3"
   }
 }
