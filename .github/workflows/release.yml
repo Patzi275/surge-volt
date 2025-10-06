@@ -24,6 +24,8 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run release script
-        run: npx semantic-release
         env:
+          VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
+          VSCE_PUBLISHER_NAME: ${{ secrets.VSCE_PUBLISHER_NAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
