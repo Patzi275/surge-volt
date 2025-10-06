@@ -22,7 +22,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-modules-
       - name: Install dependencies
-        run: npm ci
+        run: npm install
       - name: Run release script
         run: npx semantic-release
         env:
