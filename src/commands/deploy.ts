@@ -88,9 +88,9 @@ export const deployCommand = commands.registerCommand('surge-volt.deploy', async
         commands.executeCommand('surge-volt.refresh-domain-list');
         const action = await window.showInformationMessage(`Successfully deployed "${projectName}" project on surge`, 'Open', 'Copy', 'Close');
         if (action === 'Open') {
-            env.openExternal(Uri.parse(`http://${domainName}`));
+            env.openExternal(Uri.parse(`http://${domainName}.surge.sh`));
         } else if (action === 'Copy') {
-            env.clipboard.writeText(`http://${domainName}`);
+            env.clipboard.writeText(`http://${domainName}.surge.sh`);
         }
     }
 
