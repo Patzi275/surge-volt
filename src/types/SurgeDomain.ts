@@ -1,5 +1,5 @@
 import path from "path";
-import { TreeItem, TreeItemCollapsibleState } from "vscode";
+import { TreeItem, TreeItemCollapsibleState, Uri } from "vscode";
 
 export class SurgeDomain extends TreeItem {
     constructor(
@@ -19,7 +19,7 @@ export class SurgeDomain extends TreeItem {
     }
     
     iconPath = {
-        light: path.join(__filename, '..', '..', 'resources', 'light', 'cloud.svg'),
-        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'cloud.svg'),
+        light: Uri.file(path.join(__filename, '..', '..', 'resources', 'light', 'cloud.svg')),
+        dark: Uri.file(path.join(__filename, '..', '..', 'resources', 'dark', 'cloud.svg')),
     };
 }

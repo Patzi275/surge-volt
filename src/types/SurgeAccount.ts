@@ -1,5 +1,5 @@
 import path from "path";
-import { TreeItem, TreeItemCollapsibleState } from "vscode";
+import { TreeItem, TreeItemCollapsibleState, Uri } from "vscode";
 
 export class SurgeAccount extends TreeItem {
     constructor(
@@ -21,8 +21,8 @@ export class SurgeAccount extends TreeItem {
 
     public setSelected(value: boolean) {
         this.iconPath = {
-            light: path.join(__filename, '..', '..', 'resources', 'light', value ? 'circle-filled.svg' : 'account.svg'),
-            dark: path.join(__filename, '..', '..', 'resources', 'dark', value ? 'circle-filled.svg' : 'account.svg'),
+            light: Uri.file(path.join(__filename, '..', '..', 'resources', 'light', value ? 'circle-filled.svg' : 'account.svg')),
+            dark: Uri.file(path.join(__filename, '..', '..', 'resources', 'dark', value ? 'circle-filled.svg' : 'account.svg')),
         };
         this.isSelected = value;
     }
