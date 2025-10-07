@@ -14,45 +14,50 @@ export const connectAccountCommand = commands.registerCommand('surge-volt.connec
 
     if (typeof param === 'string') {
         email = param;
-        password = Storage.getSurgeAccount(email)!.password;   
+        password = Storage.getSurgeAccount(email)!.password;
     } else {
         email = param.email;
         password = param.password;
     }
 
-    const done = await window.withProgress({
+    // TODO: Create a proper type for the status
+    const status: "done" | "failed" | "retry" = (await window.withProgress({
         location: ProgressLocation.Window,
-        title: `${isNew ? 'adding & ' : ''}connecting account...`,
+        title: `${isNew ? 'Adding & Connecting' : 'Connecting'} account...`,
         cancellable: true
     }, async (progress, token) => {
         token.onCancellationRequested(() => surgeService.cancel('authentication'));
-
-        while (true) {
-            try {
-                const account = await surgeService.authenticate(email, password);
-                if (!account) {
-                    throw new Error();
-                }
-                if (!isNew) {
-                    await Storage.setSelectedSurgeAccount(email);
-                }
-                return true;
-            } catch (error: any) {
-                if (token.isCancellationRequested) { return false; }
-                const action = await window.showErrorMessage(`Error connection to account: ${error.message}`, { detail: error }, 'Retry', 'Cancel');
-                if (action !== 'Retry') { return false; }
+        try {
+            const account = await surgeService.authenticate(email, password);
+            if (!account) {
+                throw new Error();
             }
+            if (!isNew) {
+                await Storage.setSelectedSurgeAccount(email);
+            }
+            return "done";
+        } catch (err: any) {
+            if (token.isCancellationRequested) { return "failed"; }
+            const action = await window.showErrorMessage(`Error connection to account: ${err.message}`, { detail: err }, 'Retry', 'Cancel');
+            if (action === 'Retry') { return "retry"; }
+            return "failed";
         }
-    });
+    })) || "failed";
 
-    if (done) {
+    if (status === "retry") {
+        return "retry";
+    }
+
+    if (status === "done") {
         if (!isNew) {
-            commands.executeCommand('surge-volt.refresh-account-list');
             commands.executeCommand('setContext', 'surge-volt.surge:connected', true);
         }
         commands.executeCommand('surge-volt.refresh-domain-list');
-        return true;
+        await Storage.addSurgeAccount(new SurgeAccount(email!, password!));
+        await Storage.setSelectedSurgeAccount(email!);
+        window.showInformationMessage('Account logged-in/created & saved successfully.');
+        commands.executeCommand('surge-volt.refresh-account-list');
     }
 
-    return false;
+    return status;
 });

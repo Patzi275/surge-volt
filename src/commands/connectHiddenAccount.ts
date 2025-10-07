@@ -15,7 +15,7 @@ export const connectHiddenAccount = commands.registerCommand('surge-volt.connect
     if (next) {
         while (true) {
             password = await window.showInputBox({
-                prompt: `Password assword for "${email}".`,
+                prompt: `Password for "${email}".`,
                 password: true,
                 validateInput: (value: string) => null
             });
@@ -33,8 +33,8 @@ export const connectHiddenAccount = commands.registerCommand('surge-volt.connect
                 }
             } else {
                 account.password = password;
-                const accountAdded = await commands.executeCommand('surge-volt.connect-account', account, true);
-                if (accountAdded) {
+                const status = await commands.executeCommand('surge-volt.connect-account', account, true);
+                if (status === "done") {
                     window.showInformationMessage(`Account credentials updated for ${email}`);
                     commands.executeCommand('surge-volt.refresh-domain-list');
                 }
