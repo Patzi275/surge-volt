@@ -2,8 +2,8 @@ import { commands, window } from "vscode";
 import Storage from "../services/storageService";
 import { SurgeAccount } from "../types/SurgeAccount";
 
-export const connectNewAccountCommand = commands.registerCommand('surge-volt.connect-new-account', async () => {
-    const email = await window.showInputBox({
+export const connectNewAccountCommand = commands.registerCommand('surge-volt.connect-new-account', async (defaultEmail?: string) => {
+    const email = defaultEmail || await window.showInputBox({
         prompt: 'New account email',
         validateInput: (value: string) => {
             if (!value) {
@@ -18,25 +18,23 @@ export const connectNewAccountCommand = commands.registerCommand('surge-volt.con
     });
     if (!email) { return; }
 
-    const password = await window.showInputBox({
-        prompt: 'Password',
-        password: true,
-        validateInput: (value: string) => {
-            if (!value) {
-                return 'The password is required';
+    while (true) {
+        const password = await window.showInputBox({
+            prompt: `Password (for ${email})`,
+            password: true,
+            validateInput: (value: string) => {
+                if (!value) {
+                    return 'The password is required';
+                }
+                return null;
             }
-            return null;
+        });
+        if (!password) { return; }
+
+        const newAccount = new SurgeAccount(email, password);
+        const status = await commands.executeCommand('surge-volt.connect-account', newAccount, true);
+        if (status !== "retry") {
+            break;
         }
-    });
-    if (!password) { return; }
-
-    const newAccount = new SurgeAccount(email, password);
-    const done = await commands.executeCommand('surge-volt.connect-account', newAccount, true);
-
-    if (done) {
-        await Storage.addSurgeAccount(newAccount);
-        await Storage.setSelectedSurgeAccount(email);
-        window.showInformationMessage('Account logged-in/created & saved successfully.');
-        commands.executeCommand('surge-volt.refresh-account-list');
     }
 });

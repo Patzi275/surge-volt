@@ -10,8 +10,6 @@ export const deployCommand = commands.registerCommand('surge-volt.deploy', async
     logger.info("deployCommand:", domain);
     let domainName: MaybeString = randomDomainName() + '.surge.sh';
     
-    
-    
     const folderPath = getWorkspaceFolder();
     if (!folderPath) {
         logger.warn("deployCommand:", 'No project folder opened');
