@@ -1,6 +1,6 @@
 import { hello } from './commands/hello';
 import { deployCommand } from './commands/deploy';
-import { commands, ExtensionContext, window } from 'vscode';
+import { commands, ExtensionContext, StatusBarAlignment, window } from 'vscode';
 import { publishedDomainTreeData } from './providers/publishedDomainProvider';
 import { openDomainCommand } from './commands/openDomain';
 import logger from './utils/logger';
@@ -20,6 +20,8 @@ import { surgeService } from './services/surgeService';
 import { connectHiddenAccount } from './commands/connectHiddenAccount';
 import { initHostingStatusBar, updateHostingFolderStatus } from './ui/hostingStatusBar';
 import { chooseHostingFolderCommand } from './commands/chooseHostingFolder';
+import { resourcesTreeData } from './providers/resourcesProvider';
+import { giveFeedbackCommand, reportIssueCommand, starRepoCommand, viewDocsCommand } from './commands/resources';
 
 export function activate(context: ExtensionContext) {
 	logger.info('Congratulations, your extension "surge-volt" is now active!');
@@ -43,9 +45,14 @@ export function activate(context: ExtensionContext) {
 		deleteAccountCommand,
 		refreshAccountListCommand,
 
-		// tree data providers
+		giveFeedbackCommand,
+		reportIssueCommand,
+		starRepoCommand,
+		viewDocsCommand,
+
 		window.registerTreeDataProvider('surge-domains', publishedDomainTreeData),
 		window.registerTreeDataProvider('surge-accounts', accountListTreeData),
+		window.registerTreeDataProvider('surge-resources', resourcesTreeData),
 	);
 
 	initHostingStatusBar(context);

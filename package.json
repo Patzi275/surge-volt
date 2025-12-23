@@ -109,6 +109,26 @@
         "category": "Surge",
         "title": "Disconnect account",
         "icon": "$(sign-out)"
+      },
+      {
+        "command": "surge-volt.giveFeedback",
+        "category": "Surge",
+        "title": "Give Feedback"
+      },
+      {
+        "command": "surge-volt.reportIssue",
+        "category": "Surge",
+        "title": "Report Issue"
+      },
+      {
+        "command": "surge-volt.starRepo",
+        "category": "Surge",
+        "title": "Star on GitHub"
+      },
+      {
+        "command": "surge-volt.viewDocs",
+        "category": "Surge",
+        "title": "View Documentation"
       }
     ],
     "viewsContainers": {
@@ -136,6 +156,11 @@
           "id": "surge-domains",
           "name": "Domains",
           "when": "surge-volt.surge:installed"
+        },
+        {
+          "id": "surge-resources",
+          "name": "Resources",
+          "when": "surge-volt:ready"
         }
       ]
     },
