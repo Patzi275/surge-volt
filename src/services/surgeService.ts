@@ -12,13 +12,21 @@ class SurgeService {
 
     async deploy(folderPath: string, domainName: string): Promise<void> {
         const domain = domainName + '.surge.sh';
-        logger.info(`Deploying ${folderPath} on ${domain}`);
+        logger.info(`SurgeService: Deploying ${folderPath} on ${domain}`);
         return new Promise((resolve, reject) => {
-            this.deployingProcess = cp.exec(`surge ${folderPath} ${domain}`, (err, stdout, stderr) => {
+            // Properly quote the folder path to handle spaces and special characters
+            const command = `surge "${folderPath}" ${domain}`;
+            logger.info(`SurgeService: Executing command: ${command}`);
+            
+            this.deployingProcess = cp.exec(command, (err, stdout, stderr) => {
                 this.deployingProcess = null;
                 if (err) {
+                    logger.error('SurgeService: Deploy error', err.message);
+                    logger.error('SurgeService: stderr', stderr);
                     reject(err);
                 } else {
+                    logger.info('SurgeService: Deploy successful');
+                    logger.info('SurgeService: stdout', stdout);
                     resolve();
                 }
             });
