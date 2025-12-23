@@ -199,7 +199,7 @@ function extractDomainData(input: string): SurgeDomain[] {
         return new SurgeDomain(
             els[0], // id
             els[0].replace('.surge.sh', ''), // hostname
-            `${els[1]} ${els[2]} ${els[3]}`, //timeAgo
+            `${els[1]} ${els[2]} ${els[3] === "surge" ? '' : els[3]}`, //timeAgo
         );
     });
 
