@@ -18,6 +18,8 @@ import { connectNewAccountCommand } from './commands/connectNewAccount';
 import { disconnectAccountCommand } from './commands/disconnectAccount';
 import { surgeService } from './services/surgeService';
 import { connectHiddenAccount } from './commands/connectHiddenAccount';
+import { initHostingStatusBar, updateHostingFolderStatus } from './ui/hostingStatusBar';
+import { chooseHostingFolderCommand } from './commands/chooseHostingFolder';
 
 export function activate(context: ExtensionContext) {
 	logger.info('Congratulations, your extension "surge-volt" is now active!');
@@ -28,6 +30,7 @@ export function activate(context: ExtensionContext) {
 		hello,
 		installSurgeCommand,
 		deployCommand,
+		chooseHostingFolderCommand,
 		deployOnExistingCommand,
 		openDomainCommand,
 		refreshDomainListCommand,
@@ -44,6 +47,8 @@ export function activate(context: ExtensionContext) {
 		window.registerTreeDataProvider('surge-domains', publishedDomainTreeData),
 		window.registerTreeDataProvider('surge-accounts', accountListTreeData),
 	);
+
+	initHostingStatusBar(context);
 	
 	Storage.init(context);
 	initContextVariables();

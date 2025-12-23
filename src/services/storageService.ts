@@ -2,6 +2,7 @@ import { commands, ExtensionContext } from "vscode";
 import { SurgeDomain } from "../types/SurgeDomain";
 import { SurgeAccount } from "../types/SurgeAccount";
 import logger from "../utils/logger";
+import { MaybeString } from "../types";
 
 export default class Storage {
     private static context: ExtensionContext;
@@ -23,6 +24,16 @@ export default class Storage {
 
     static doSurgeDomainExist(name: string): boolean {
         return this.getSurgeDomains().some((d) => d.hostname === name);
+    }
+
+
+    // Hosting folder
+    static getTargetFolder(): MaybeString {
+        return this.context?.workspaceState.get<string>('surge-volt:target-folder');
+    }
+
+    static async setTargetFolder(folderPath: MaybeString) {
+        await this.context?.workspaceState.update('surge-volt:target-folder', folderPath);
     }
 
 

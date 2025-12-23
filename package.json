@@ -44,7 +44,13 @@
         "command": "surge-volt.deploy",
         "category": "Surge",
         "title": "Deploy",
-        "icon": "$(add)"
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "surge-volt.choose-hosting-folder",
+        "category": "Surge",
+        "title": "Choose hosting folder",
+        "icon": "$(folder-opened)"
       },
       {
         "command": "surge-volt.deploy-on-existing",
@@ -161,6 +167,11 @@
           "command": "surge-volt.deploy",
           "when": "view == surge-domains",
           "group": "navigation"
+        },
+        {
+          "command": "surge-volt.choose-hosting-folder",
+          "when": "view == surge-domains",
+          "group": "navigation@1"
         },
         {
           "command": "surge-volt.refresh-account-list",
