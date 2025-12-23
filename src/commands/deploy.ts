@@ -28,8 +28,16 @@ export const deployCommand = commands.registerCommand('surge-volt.deploy', async
         'Continue'
     );
     if (folderQuickPick === 'Change folder') {
-        folderPath = await commands.executeCommand<string | undefined>('surge-volt.choose-hosting-folder');
-        if (!folderPath) { return; }
+        const newFolder = await commands.executeCommand<string | undefined>('surge-volt.choose-hosting-folder');
+        if (!newFolder) { 
+            logger.info('deployCommand: Folder selection cancelled');
+            return; 
+        }
+        folderPath = newFolder;
+        logger.info('deployCommand: Folder changed to', folderPath);
+    } else if (folderQuickPick !== 'Continue') {
+        logger.info('deployCommand: User cancelled deployment');
+        return;
     }
 
     const isAuthenticated = await surgeService.whoami();
