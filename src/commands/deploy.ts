@@ -5,12 +5,14 @@ import { extractNameOnly, getWorkspaceFolder, randomDomainName } from '../utils'
 import { SurgeDomain } from '../types/SurgeDomain';
 import logger from '../utils/logger';
 import Storage from '../services/storageService';
+import { chooseHostingFolderCommand } from './chooseHostingFolder';
+import { promptForDomain } from '../utils/domainInput';
 
 export const deployCommand = commands.registerCommand('surge-volt.deploy', async (domain: SurgeDomain | undefined) => {
     logger.info("deployCommand:", domain);
     let domainName: MaybeString = randomDomainName() + '.surge.sh';
     
-    const folderPath = getWorkspaceFolder();
+    let folderPath = Storage.getTargetFolder() || getWorkspaceFolder();
     if (!folderPath) {
         logger.warn("deployCommand:", 'No project folder opened');
         const action = await window.showErrorMessage("Please open the project folder before", "Open Folder");
@@ -18,6 +20,16 @@ export const deployCommand = commands.registerCommand('surge-volt.deploy', async
             commands.executeCommand('vscode.openFolder');
         }
         return;
+    }
+
+    const folderQuickPick = await window.showInformationMessage(
+        `Deploy from folder: ${folderPath}`,
+        'Change folder',
+        'Continue'
+    );
+    if (folderQuickPick === 'Change folder') {
+        folderPath = await commands.executeCommand<string | undefined>('surge-volt.choose-hosting-folder');
+        if (!folderPath) { return; }
     }
 
     const isAuthenticated = await surgeService.whoami();
@@ -40,12 +52,7 @@ export const deployCommand = commands.registerCommand('surge-volt.deploy', async
             return;
         }
     } else {
-        domainName = await window.showInputBox({
-            prompt: 'Domain',
-            value: domainName,
-            validateInput: (value: string) => null,
-        });
-
+        domainName = await promptForDomain(domainName);
         if (!domainName) { return; }
         domainName = extractNameOnly(domainName);
         if (Storage.doSurgeDomainExist(domainName)) {
