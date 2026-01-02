@@ -67,7 +67,8 @@
       {
         "command": "surge-volt.open-domain",
         "category": "Surge",
-        "title": "Open domain"
+        "title": "Open domain",
+        "icon": "$(link-external)"
       },
       {
         "command": "surge-volt.hello",
@@ -216,6 +217,11 @@
       ],
       "view/item/context": [
         {
+          "command": "surge-volt.open-domain",
+          "when": "view == surge-domains",
+          "group": "inline@0"
+        },
+        {
           "command": "surge-volt.deploy-on-existing",
           "when": "view == surge-domains",
           "group": "inline@1"
@@ -234,6 +240,10 @@
       "commandPalette": [
         {
           "command": "surge-volt.deploy-on-existing",
+          "when": "false"
+        },
+        {
+          "command": "surge-volt.open-domain",
           "when": "false"
         },
         {

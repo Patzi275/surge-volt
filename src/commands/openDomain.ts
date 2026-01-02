@@ -3,8 +3,16 @@ import { SurgeDomain } from "../types/SurgeDomain";
 import { MaybeString } from "../types";
 import logger from "../utils/logger";
 
-export const openDomainCommand = commands.registerCommand('surge-volt.open-domain', async (hostname: string | undefined) => {
+export const openDomainCommand = commands.registerCommand('surge-volt.open-domain', async (arg: string | SurgeDomain | undefined) => {
     let url = null;
+    let hostname: string | undefined;
+
+    if (arg instanceof SurgeDomain) {
+        hostname = arg.hostname;
+    } else if (typeof arg === 'string') {
+        hostname = arg;
+    }
+
     if (hostname) {
         url = `https://${hostname}.surge.sh`;
     } else {

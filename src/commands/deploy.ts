@@ -8,8 +8,8 @@ import Storage from '../services/storageService';
 import { chooseHostingFolderCommand } from './chooseHostingFolder';
 import { promptForDomain } from '../utils/domainInput';
 
-export const deployCommand = commands.registerCommand('surge-volt.deploy', async (domain: SurgeDomain | undefined) => {
-    logger.info("deployCommand:", domain);
+export const deployCommand = commands.registerCommand('surge-volt.deploy', async () => {
+    logger.info("deployCommand: Starting new deployment");
     let domainName: MaybeString = randomDomainName() + '.surge.sh';
     
     let folderPath = Storage.getTargetFolder() || getWorkspaceFolder();
@@ -48,9 +48,10 @@ export const deployCommand = commands.registerCommand('surge-volt.deploy', async
     
     const projectName = folderPath.split('/').pop();
 
-    if (domain) {
-        domainName = domain.hostname;
-        // TODO: Implement "Don't show again" feature
+    domainName = await promptForDomain(domainName);
+    if (!domainName) { return; }
+    domainName = extractNameOnly(domainName);
+    if (Storage.doSurgeDomainExist(domainName)) {
         const action = await window.showWarningMessage(
             `You are about to deploy "${projectName}" project on surge to the existing domain "${domainName}.surge.sh"`,
             { modal: true },
@@ -58,20 +59,6 @@ export const deployCommand = commands.registerCommand('surge-volt.deploy', async
         );
         if (action !== 'Deploy') {
             return;
-        }
-    } else {
-        domainName = await promptForDomain(domainName);
-        if (!domainName) { return; }
-        domainName = extractNameOnly(domainName);
-        if (Storage.doSurgeDomainExist(domainName)) {
-            const action = await window.showWarningMessage(
-                `You are about to deploy "${projectName}" project on surge to the existing domain "${domainName}.surge.sh"`,
-                { modal: true },
-                'Deploy', 'Yes, don\'t show again'
-            );
-            if (action !== 'Deploy') {
-                return;
-            }
         }
     }
 
