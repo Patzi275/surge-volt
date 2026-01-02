@@ -74,7 +74,12 @@ export default class Storage {
 
     static async addSurgeAccount(account: SurgeAccount) {
         const accounts = this.getSurgeAccounts();
-        accounts.push(account);
+        const existingIndex = accounts.findIndex((a) => a.email === account.email);
+        if (existingIndex !== -1) {
+            accounts[existingIndex] = account;
+        } else {
+            accounts.push(account);
+        }
         await this.setSurgeAccounts(accounts);
     }
 
