@@ -9,13 +9,8 @@ export class SurgeDomain extends TreeItem {
         public readonly collapsibleState: TreeItemCollapsibleState = TreeItemCollapsibleState.None
     ) {
         super(hostname, collapsibleState);
-        this.tooltip = 'Open';
+        this.tooltip = 'Right-click to see options';
         this.description = this.timeAgo;
-        this.command = {
-            command: 'surge-volt.open-domain',
-            title: 'Open Domain',
-            arguments: [hostname]
-        };
     }
     
     iconPath = {
