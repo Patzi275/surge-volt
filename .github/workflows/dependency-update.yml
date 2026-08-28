@@ -1,0 +1,28 @@
+name: Dependency Update
+
+on:
+  schedule:
+    - cron: "0 0 * * 3"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  dependency-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update dependencies
+        uses: taichi/actions-package-update@master
+        env:
+          AUTHOR_NAME: github-actions[bot]
+          AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          EXECUTE: "true"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: -u --packageFile package.json --loglevel verbose
