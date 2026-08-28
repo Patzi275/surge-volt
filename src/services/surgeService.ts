@@ -185,7 +185,7 @@ class SurgeService {
     }
 }
 
-function extractEmail(input: string): string | null {
+export function extractEmail(input: string): string | null {
     input = input.replace(/\x1b\[[0-9;]*m/g, '').trim();
     if (input === '' || input.includes('Not Authenticated')) {
         return null;
@@ -194,7 +194,7 @@ function extractEmail(input: string): string | null {
     return email;
 }
 
-function extractDomainData(input: string): SurgeDomain[] {
+export function extractDomainData(input: string): SurgeDomain[] {
     if (input.includes('Empty')) {
         return [];
     }
